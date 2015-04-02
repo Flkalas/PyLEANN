@@ -103,7 +103,12 @@ class PERCEPTRON(object):
        
         total = 0       
           
-        for i in range(self.numInput()):            
+        for i in range(self.numInput()):
+            if (len(self.weights)-1 < i) or (len(dataX)-1 < self.indexes[i]):
+                print len(self.weights)-1, i, len(dataX)-1, self.indexes[i]
+                print self
+                while True:
+                    pass
             total += self.weights[i]*dataX[self.indexes[i]]
   
         if (total < self.threshold) == self.region:

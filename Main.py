@@ -1,12 +1,13 @@
 import GenePool
 import ProblemPool
 
-prbPool = ProblemPool.PROBLEM_POOL("./car.csv")  
+prbPool = ProblemPool.PROBLEM_POOL("./iris.csv")  
 gp = GenePool.GENE_POOL()
-gp.initGenePool(prbPool, 5000)
+gp.initGenePool(prbPool, 400)
 generation = 0
+learningState = True
 
-while True:
+while learningState:
     if len(gp.genePool) < 1:
         print "All dead"
         break
@@ -17,6 +18,8 @@ while True:
 #         arrTime.append(time.time())
         gp.statLayerCount()
         gp.evaluation(True)
+        learningState = gp.checkLearningState()
+        
 #         arrTime.append(time.time())
         gp.crossover()
 #         arrTime.append(time.time())

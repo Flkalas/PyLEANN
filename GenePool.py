@@ -50,7 +50,7 @@ class GENE_POOL(object):
         newGenePool += copy.deepcopy(temp[0:bankSize])
         print "-1" + str(temp[0])
         
-        if enablePrintBest:     
+        if enablePrintBest:
             print newGenePool[0]        
         self.calSolvingPercentage()
                         
@@ -76,6 +76,19 @@ class GENE_POOL(object):
         self.genePool = newGenePool
         
         return len(self.genePool)
+    
+    def checkLearningState(self):        
+        if self.avgPercentage > 0.95:
+            if self.previousAvgPercentage == self.avgPercentage:
+                self.numGenStaturated += 1
+                if self.numGenStaturated > 10:
+                    return False               
+            else :
+                self.previousAvgPercentage = self.avgPercentage
+        
+        self.numGenStaturated = 0
+        
+        return True
     
     def selection(self, indexOutput=-1, numToSelection=2):
         
@@ -244,7 +257,9 @@ class GENE_POOL(object):
         print self.prbPool.sizeBank
         print '\t {0:15} {1:3.5f} {2:3.5f}'.format("Total", round(max(percentage),5), round(numpy.mean(percentage),5))
         for i in range(self.prbPool.sizeY):            
-            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(max(classPercentage[i]),5), round(numpy.mean(classPercentage[i]),5))             
+            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(max(classPercentage[i]),5), round(numpy.mean(classPercentage[i]),5))
+            
+                     
         
     def adjProbability(self):
         pass
