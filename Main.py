@@ -13,25 +13,23 @@ while learningState:
         break
     else:
         print "\n" + str(generation) + " Pool size: "+ str(len(gp.genePool)) + "\n"
-#         arrTime = [time.time()]
+
         gp.doGame()
-#         arrTime.append(time.time())
+
         gp.statLayerCount()
         gp.evaluation(True)
         learningState = gp.checkLearningState()
         
-#         arrTime.append(time.time())
         gp.crossover()
-#         arrTime.append(time.time())
         gp.mutation()
-#         arrTime.append(time.time())
         gp.evolution()
-#         arrTime.append(time.time())
-        gp.resetCounter()
-        
+        gp.resetCounter()        
         gp.newGene()
-         
+        
         generation += 1
-#         for i in range(len(arrTime)-1):
-#             print i, arrTime[i+1] - arrTime[i]
+        
+        if generation > 100:
+            print "Generation is over a hundred. It is too long time... The simulation end."
+            learningState = False
+
 

@@ -39,25 +39,19 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         super(CELL, self).initbyRnas(parents)        
         
         self.initSights(prbPool,self.getSizeLayer())        
-        self.initFeeds(prbPool.sizeY)
-        
-        self.degeneration()
+        self.initFeeds(prbPool.sizeY)        
         
     def initbyMicevol(self, parents, prbPool):
         super(CELL, self).initbyMicevol(parents)
         
         self.initSights(prbPool,self.getSizeLayer())        
         self.initFeeds(prbPool.sizeY)
-        
-        self.degeneration()        
     
     def initbyMacevol(self, parents, prbPool):
         super(CELL, self).initbyMacevol(parents)
                 
         self.initSights(prbPool,self.getSizeLayer())        
         self.initFeeds(prbPool.sizeY)
-        
-        self.degeneration()
         
     def initFeeds(self,sizeY):
         self.feeds = [0 for _ in range(sizeY)]

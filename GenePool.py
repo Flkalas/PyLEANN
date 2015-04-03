@@ -21,7 +21,9 @@ class GENE_POOL(object):
         self.probCrossover = 0.7
         self.probMutation = 0.3
         self.probMacroEvolution = 0.1
-        self.probMicroEvolution = 0.2 
+        self.probMicroEvolution = 0.2
+        
+        self.previousMaxPercentage = 0 
         
     def doGame(self):
         
@@ -77,14 +79,18 @@ class GENE_POOL(object):
         
         return len(self.genePool)
     
-    def checkLearningState(self):        
-        if self.avgPercentage > 0.95:
-            if self.previousAvgPercentage == self.avgPercentage:
+    def checkLearningState(self):                
+        if self.maxPercentage > 0.95:            
+            if self.previousMaxPercentage == self.maxPercentage:
                 self.numGenStaturated += 1
-                if self.numGenStaturated > 10:
-                    return False               
-            else :
-                self.previousAvgPercentage = self.avgPercentage
+                if self.numGenStaturated < 10:
+                    print "The best one is over 95.00% in " + str(self.numGenStaturated) + "time(s)!!!"
+                    return True
+                else:
+                    print "The best is saturated. Learning is over."
+                    return False                          
+            else:
+                self.previousMaxPercentage = self.maxPercentage
         
         self.numGenStaturated = 0
         

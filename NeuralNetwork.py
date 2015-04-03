@@ -37,6 +37,8 @@ class NEURAL_NETWORK(object):
             initLayer.append(newPC)
         self.layer.append(initLayer)
         
+        return self.checkIntegrity("BASIC")
+        
     def initbyRnas(self, parents):
         
         sizeLayer = []        
@@ -84,17 +86,22 @@ class NEURAL_NETWORK(object):
         if len(tempLayer) > 0:
             self.layer.append(tempLayer)
             
-    def checkIntegrity(self):        
+        self.degeneration()
+            
+        return self.checkIntegrity("RNA")
+            
+    def checkIntegrity(self,fromWhere="DEFAULT"):        
         for i, eachLayer in enumerate(self.layer):
             if i > 0:
                 for eachPerceptron in eachLayer:
                     for eachIndex in eachPerceptron.indexes:
                         if eachIndex > len(self.layer[i-1]):
-                            print "ERROR: Out of Index"
+                            print "ERROR: Out of Index" + fromWhere
+                            self.printLayer()
                             while True:
                                 pass
                             return False                            
-        return True                                      
+        return True
         
     def checkPerceptronOver(self):
         if len(self.layer) > 1:
@@ -157,8 +164,10 @@ class NEURAL_NETWORK(object):
             for eachParent in parents:
                 print eachParent
             print "micro"
+            
+        self.degeneration()
         
-        
+        return self.checkIntegrity("MICRO")
         
     def initbyMacevol(self, parents):
         numBasicLayer = parents[0].getSizeLayer()
@@ -182,8 +191,10 @@ class NEURAL_NETWORK(object):
                 print eachParent
                             
             print "macro"
-            
         
+        self.degeneration()
+        
+        return self.checkIntegrity("MACRO")
 
     def calculate(self, dataX):        
         outputData = dataX
@@ -217,7 +228,7 @@ class NEURAL_NETWORK(object):
 #             print self
         self.layer[0][indexMutatePerceptron].mutate(sizeX)
         
-        return self
+        return self.checkIntegrity("MUTATE")
     
     def degeneration(self):
         if self.getSizeLayer() < 2:
@@ -227,6 +238,8 @@ class NEURAL_NETWORK(object):
         self.degenSimilarity()
         self.degenUniquness()
         self.degenLayer()
+        
+        
                 
     def degenSimilarity(self):
         deletedPCset = []
