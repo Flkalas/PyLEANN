@@ -68,7 +68,7 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         self.sights = [Sight.SIGHT() for _ in range(prbPool.sizeY)]
         for item in self.sights:
             item.initSight(prbPool,numLayer)
-        
+                    
     def solveProblem(self, prb):
         answer = self.calculate(prb[0])
         boolRight = True

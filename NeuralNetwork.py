@@ -84,9 +84,17 @@ class NEURAL_NETWORK(object):
         if len(tempLayer) > 0:
             self.layer.append(tempLayer)
             
-
-        
-        
+    def checkIntegrity(self):        
+        for i, eachLayer in enumerate(self.layer):
+            if i > 0:
+                for eachPerceptron in eachLayer:
+                    for eachIndex in eachPerceptron.indexes:
+                        if eachIndex > len(self.layer[i-1]):
+                            print "ERROR: Out of Index"
+                            while True:
+                                pass
+                            return False                            
+        return True                                      
         
     def checkPerceptronOver(self):
         if len(self.layer) > 1:
@@ -183,15 +191,22 @@ class NEURAL_NETWORK(object):
             inputData = outputData
             outputData = []
             for j in range(len(self.layer[i])):
-#                 for oneIndex in self.layer[i][j].indexes:
-#                     if oneIndex >= len(inputData):
-#                         print "out of index"
-#                         print id(self)
-#                         print self
+                for oneIndex in self.layer[i][j].indexes:
+                    if oneIndex >= len(inputData):
+                        print "out of index"
+                        print id(self)
+                        print self
+                        print "one"
+                        print self.layer[i][j]
+                        print "ERORR"
+                        while True:
+                            pass
 #                     if len(self.layer[i][j].indexes) <= 1:                        
 #                         print "zero Peceptron"
 #                         print id(self)
 #                         print self
+                    
+                
                     
                 outputData.append(self.layer[i][j].calculate(inputData))
         return outputData
