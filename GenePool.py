@@ -46,11 +46,11 @@ class GENE_POOL(object):
         for i in range(-1, self.prbPool.sizeY):
             temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
             newGenePool += copy.deepcopy(temp[0:bankSize])
-            print i, temp[0]
+            #print i, temp[0]
                     
         temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
         newGenePool += copy.deepcopy(temp[0:bankSize])
-        print "-1" + str(temp[0])
+        #print "-1" + str(temp[0])
         
         if enablePrintBest:
             print newGenePool[0]        
@@ -84,10 +84,10 @@ class GENE_POOL(object):
             if self.previousMaxPercentage == self.maxPercentage:
                 self.numGenStaturated += 1
                 if self.numGenStaturated < 10:
-                    print "The best one is over 95.00% in " + str(self.numGenStaturated) + "time(s)!!!"
+                    print "\nThe best one is over 95.00% in " + str(self.numGenStaturated) + " time(s)!!!"
                     return True
                 else:
-                    print "The best is saturated. Learning is over."
+                    print "\nThe best is saturated. Learning is over."
                     return False                          
             else:
                 self.previousMaxPercentage = self.maxPercentage
@@ -260,7 +260,7 @@ class GENE_POOL(object):
         self.maxPercentage = max(percentage)
         self.avgPercentage = numpy.mean(percentage)
 
-        print self.prbPool.sizeBank
+        #print self.prbPool.sizeBank
         print '\t {0:15} {1:3.5f} {2:3.5f}'.format("Total", round(max(percentage),5), round(numpy.mean(percentage),5))
         for i in range(self.prbPool.sizeY):            
             print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(max(classPercentage[i]),5), round(numpy.mean(classPercentage[i]),5))

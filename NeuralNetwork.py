@@ -95,11 +95,9 @@ class NEURAL_NETWORK(object):
             if i > 0:
                 for eachPerceptron in eachLayer:
                     for eachIndex in eachPerceptron.indexes:
-                        if eachIndex > len(self.layer[i-1]):
-                            print "ERROR: Out of Index" + fromWhere
+                        if eachIndex > len(self.layer[i-1])-1:
+                            print "ERROR: Out of Index in " + fromWhere
                             self.printLayer()
-                            while True:
-                                pass
                             return False                            
         return True
         
@@ -164,7 +162,7 @@ class NEURAL_NETWORK(object):
             for eachParent in parents:
                 print eachParent
             print "micro"
-            
+                        
         self.degeneration()
         
         return self.checkIntegrity("MICRO")
@@ -234,7 +232,7 @@ class NEURAL_NETWORK(object):
         if self.getSizeLayer() < 2:
             return False
         
-#         self.printLayer()        
+#         self.printLayer()
         self.degenSimilarity()
         self.degenUniquness()
         self.degenLayer()
@@ -243,6 +241,9 @@ class NEURAL_NETWORK(object):
                 
     def degenSimilarity(self):
         deletedPCset = []
+        
+        print "---------------------------------", id(self), "--------------------"
+        self.printLayer()
                 
         for compareSet in itertools.combinations(range(len(self.layer[0])),2):
             compareSet = list(compareSet)
@@ -264,15 +265,20 @@ class NEURAL_NETWORK(object):
             
         deletedPClist.sort(reverse=True)
             
+        print deletedPClist
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
         
+        if not self.checkIntegrity("MICRO DEGEN"):
+            while True:
+                pass
+                
         return len(deletedPCset) > 0
     
     def degenUniquness(self):        
         if self.getSizeLayer() < 3:
             return False
-                
+        
         for i in range(1,len(self.layer)-1):            
             listUniquness = []
             
@@ -293,9 +299,11 @@ class NEURAL_NETWORK(object):
                 self.replaceIndex(i+1, eachNotUnique, smallestOne)
                 
                 listDeletedPC += eachNotUnique
+
             
-            listDeletedPC.sort(reverse=True)            
-            self.adjustIndexByDelete(i+1, listDeletedPC)
+            listDeletedPC.sort(reverse=True)
+            self.adjustIndexByDelete(i+1, listDeletedPC)            
+            
             self.deletePerceptrons(i, listDeletedPC)
         
         return len(listDeletedPC) > 0
