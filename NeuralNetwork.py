@@ -98,6 +98,8 @@ class NEURAL_NETWORK(object):
                         if eachIndex > len(self.layer[i-1])-1:
                             print "ERROR: Out of Index in " + fromWhere
                             self.printLayer()
+                            while True:
+                                pass
                             return False                            
         return True
         
@@ -242,9 +244,6 @@ class NEURAL_NETWORK(object):
     def degenSimilarity(self):
         deletedPCset = []
         
-        print "---------------------------------", id(self), "--------------------"
-        self.printLayer()
-                
         for compareSet in itertools.combinations(range(len(self.layer[0])),2):
             compareSet = list(compareSet)
             if self.isSimilar(compareSet):
@@ -270,11 +269,7 @@ class NEURAL_NETWORK(object):
         print deletedPClist
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
-        
-        if not self.checkIntegrity("MICRO DEGEN"):
-            while True:
-                pass
-                
+                        
         return len(deletedPCset) > 0
     
     def degenUniquness(self):        
@@ -454,16 +449,21 @@ class NEURAL_NETWORK(object):
     def insertToSet(self,setList,testSet):
         isNotExist = True
         numInserted = 0
+        
+        
         for singleIndex in testSet:
             for i, singleSet in enumerate(setList):
                 if singleIndex in singleSet:
+                    print "TEST", testSet
+                    print "SET", setList
+                    
                     setList[i] += testSet
                     numInserted += 1
-                    isNotExist = False
-                    break
+                    print numInserted
+                    isNotExist = False                    
 
-        if numInserted > 1:
-            print setList
+        if numInserted > 1:            
+            print "SET", setList
             def clearDuplicateSet(setList):
                 setNewLists = []
                 for i, listBased in enumerate(setList):
@@ -477,13 +477,13 @@ class NEURAL_NETWORK(object):
                                     setList.remove(listTargeted)                                    
                                     break
             clearDuplicateSet(setList)
-            print setList
+            print "RESULT", setList
             while True:
                 pass
             
         if isNotExist:
             setList.append(testSet)
-                                
+
         return not isNotExist
     
     def isSimilar(self,pcIndexes):
