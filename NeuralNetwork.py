@@ -251,13 +251,11 @@ class NEURAL_NETWORK(object):
 
         if len(listSimilarity) == 0:
             return False
-
-        print listSimilarity    
+    
         listSimilarityPC = self.getCliqueSetCombinedList(listSimilarity,len(self.layer[0]))
         
         deletedPClist = [] 
-        for eachSet in listSimilarityPC:
-            
+        for eachSet in listSimilarityPC:                        
             choosedOne = random.choice(eachSet)
             eachSet.remove(choosedOne)
             
@@ -267,7 +265,6 @@ class NEURAL_NETWORK(object):
             
         deletedPClist.sort(reverse=True)
             
-        print deletedPClist
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
                         

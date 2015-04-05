@@ -36,7 +36,7 @@ def learningLeann(nameFile):
                 learningState = False
 
 numTimes = 0
-while True:
+while numTimes < 100:
     learningLeann("./iris.csv")
     numTimes += 1
     print "\n" + str(numTimes) + " Simulation is ended."
