@@ -158,13 +158,6 @@ class NEURAL_NETWORK(object):
         fuseLayer = [self.createFusingPerceptron(i, stacks, len(extendedParents[0].layer[maxLayer-2])) for i in range(sizeOutput)]
         self.layer.append(fuseLayer)
         
-        if self.checkPerceptronOver():
-            print len(parents)
-            print "Error"
-            for eachParent in parents:
-                print eachParent
-            print "micro"
-                        
         self.degeneration()
         
         return self.checkIntegrity("MICRO")
