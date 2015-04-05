@@ -249,7 +249,7 @@ class NEURAL_NETWORK(object):
             if self.isSimilar(compareSet):
                 listSimilarity.append(list(compareSet))
 
-        if len(deletedPCset) == 0:
+        if len(listSimilarity) == 0:
             return False
 
         print listSimilarity    
