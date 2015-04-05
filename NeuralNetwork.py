@@ -253,7 +253,7 @@ class NEURAL_NETWORK(object):
             return False
 
         print listSimilarity    
-        listSimilarityPC = self.getCliqueSetCombinedList(listSimilarity,len(self.layer[i]))
+        listSimilarityPC = self.getCliqueSetCombinedList(listSimilarity,len(self.layer[0]))
         
         deletedPClist = [] 
         for eachSet in listSimilarityPC:
