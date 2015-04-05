@@ -253,6 +253,8 @@ class NEURAL_NETWORK(object):
         if len(deletedPCset) == 0:
             return False
 
+		print deletedPCset
+			
         deletedPClist = [] 
         for eachSet in deletedPCset:
             listDuplicate = list(set(eachSet))
