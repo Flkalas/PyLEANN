@@ -527,12 +527,12 @@ class NEURAL_NETWORK(object):
             for i, eachPC in enumerate(self.layer[indexTargetLayer]):
                 for j, eachPcIndex in enumerate(eachPC.indexes):                    
                     if eachPcIndex > eachDeletedIndex:
-                        self.layer[indexTargetLayer][i].indexes[j] -= 1
+                        self.layer[indexTargetLayer][i].indexes[j] -= 1                        
                 self.layer[indexTargetLayer][i].inputClear()
                 
         return True
                         
-    def deletePerceptrons(self,indexLayer,listDeletedPcIndexes):        
+    def deletePerceptrons(self,indexLayer,listDeletedPcIndexes):
         newLayer = []
         
         for i, eachPC in enumerate(self.layer[indexLayer]):
