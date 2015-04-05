@@ -177,13 +177,6 @@ class NEURAL_NETWORK(object):
         
         mergingLayer = [self.createMergingPerceptron(i, numOutput) for i in range(numOutput)]
         self.layer.append(mergingLayer)
-
-        if self.checkPerceptronOver():
-            print "Error"
-            for eachParent in parents:
-                print eachParent
-                            
-            print "macro"
         
         self.degeneration()
         
@@ -195,23 +188,20 @@ class NEURAL_NETWORK(object):
             inputData = outputData
             outputData = []
             for j in range(len(self.layer[i])):
-                for oneIndex in self.layer[i][j].indexes:
-                    if oneIndex >= len(inputData):
-                        print "out of index"
-                        print id(self)
-                        print self
-                        print "one"
-                        print self.layer[i][j]
-                        print "ERORR"
-                        while True:
-                            pass
+#                 for oneIndex in self.layer[i][j].indexes:
+#                     if oneIndex >= len(inputData):
+#                         print "out of index"
+#                         print id(self)
+#                         print self
+#                         print "one"
+#                         print self.layer[i][j]
+#                         print "ERORR"
+#                         while True:
+#                             pass
 #                     if len(self.layer[i][j].indexes) <= 1:                        
 #                         print "zero Peceptron"
 #                         print id(self)
 #                         print self
-                    
-                
-                    
                 outputData.append(self.layer[i][j].calculate(inputData))
         return outputData
     
@@ -244,8 +234,10 @@ class NEURAL_NETWORK(object):
 
         if len(listSimilarity) == 0:
             return False
+        print listSimilarity
     
         listSimilarityPC = self.getCliqueSetCombinedList(listSimilarity,len(self.layer[0]))
+        print listSimilarityPC
         
         deletedPClist = [] 
         for eachSet in listSimilarityPC:                        
@@ -257,10 +249,13 @@ class NEURAL_NETWORK(object):
             deletedPClist += eachSet
             
         deletedPClist.sort(reverse=True)
+        print deletedPClist
             
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
-                        
+
+        self.checkIntegrity("Degen Similarity")
+
         return len(listSimilarity) > 0
     
     def degenUniquness(self):        
@@ -403,7 +398,7 @@ class NEURAL_NETWORK(object):
                 
                 newListCliqueN = []
                 for j, eachDelete in enumerate(hasLargerClique):
-                    print listCliqueN[i], hasLargerClique
+#                     print listCliqueN[i], hasLargerClique
                     if not eachDelete:
                         newListCliqueN.append(listCliqueN[i][j])
                 listCliqueN[i] = newListCliqueN
@@ -435,57 +430,7 @@ class NEURAL_NETWORK(object):
                 listClique.append([posMat[0],posMat[1]])
         
         return listClique
-    
-    def insertToSet(self,setList,testSet):
-        isNotExist = True
-        numInserted = 0
         
-        setNextLists = []
-
-        for singleIndex in testSet:            
-            for i, singleSet in enumerate(setList):
-                if singleIndex in singleSet:
-                    tempList = copy.deepcopy(singleSet)
-                    tempList += testSet
-                    isNotExist = False
-                    break
-                 
-        
-            
-                    print "TEST", testSet
-                    print "SET", setList
-                    
-                    setList[i] += testSet
-                    numInserted += 1
-                    print numInserted
-                    isNotExist = False
-
-                    
-
-        if numInserted > 1:
-            print "SET", setList
-            def clearDuplicateSet(setList):
-                setNewLists = []
-                for i, listBased in enumerate(setList):
-                    for j, listTargeted in enumerate(setList):
-                        if i != j:
-                            for eachIndex in listBased:
-                                if eachIndex in listTargeted:
-                                    listNew = listBased+listTargeted
-                                    setList.append(listNew)
-                                    setList.remove(listBased)
-                                    setList.remove(listTargeted)                                    
-                                    break
-            clearDuplicateSet(setList)
-            print "RESULT", setList
-            while True:
-                pass
-            
-        if isNotExist:
-            setList.append(testSet)
-
-        return not isNotExist
-    
     def isSimilar(self,pcIndexes):
         pcSet = []
         for singleIndex in pcIndexes:
