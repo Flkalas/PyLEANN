@@ -460,6 +460,7 @@ class NEURAL_NETWORK(object):
                     setList[i] += testSet
                     numInserted += 1
                     isNotExist = False
+                    break
 
         if numInserted > 1:
             print setList
