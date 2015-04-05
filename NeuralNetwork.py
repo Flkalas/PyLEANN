@@ -453,12 +453,33 @@ class NEURAL_NETWORK(object):
     
     def insertToSet(self,setList,testSet):
         isNotExist = True
+        numInserted = 0
         for singleIndex in testSet:
             for i, singleSet in enumerate(setList):
                 if singleIndex in singleSet:
                     setList[i] += testSet
-                    isNotExist = False 
-        
+                    numInserted += 1
+                    isNotExist = False
+
+        if numInserted > 1:
+            print setList
+            def clearDuplicateSet(setList):
+                setNewLists = []
+                for i, listBased in enumerate(setList):
+                    for j, listTargeted in enumerate(setList):
+                        if i != j:
+                            for eachIndex in listBased:
+                                if eachIndex in listTargeted:
+                                    listNew = listBased+listTargeted
+                                    setList.append(listNew)
+                                    setList.remove(listBased)
+                                    setList.remove(listTargeted)                                    
+                                    break
+            clearDuplicateSet(setList)
+            print setList
+            while True:
+                pass
+            
         if isNotExist:
             setList.append(testSet)
                                 
