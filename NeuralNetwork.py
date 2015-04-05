@@ -242,27 +242,28 @@ class NEURAL_NETWORK(object):
         
                 
     def degenSimilarity(self):
-        deletedPCset = []
+        listSimilarity = []
         
         for compareSet in itertools.combinations(range(len(self.layer[0])),2):
             compareSet = list(compareSet)
             if self.isSimilar(compareSet):
-                self.insertToSet(deletedPCset, compareSet)
+                listSimilarity.append(list(compareSet))
 
         if len(deletedPCset) == 0:
             return False
 
-        print deletedPCset
-
+        print listSimilarity    
+        listSimilarityPC = self.getCliqueSetCombinedList(listUniquness,len(self.layer[i]))
+        
         deletedPClist = [] 
-        for eachSet in deletedPCset:
-            listDuplicate = list(set(eachSet))
-            choosedOne = random.choice(listDuplicate)
-            listDuplicate.remove(choosedOne)
+        for eachSet in listSimilarityPC:
             
-            self.replaceIndex(1, listDuplicate, choosedOne)
+            choosedOne = random.choice(eachSet)
+            eachSet.remove(choosedOne)
             
-            deletedPClist += listDuplicate
+            self.replaceIndex(1, eachSet, choosedOne)
+            
+            deletedPClist += eachSet
             
         deletedPClist.sort(reverse=True)
             
@@ -270,7 +271,7 @@ class NEURAL_NETWORK(object):
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
                         
-        return len(deletedPCset) > 0
+        return len(listSimilarity) > 0
     
     def degenUniquness(self):        
         if self.getSizeLayer() < 3:
@@ -286,7 +287,7 @@ class NEURAL_NETWORK(object):
             if len(listUniquness) == 0:
                 return False
             
-            listNotUniquePC = self.getListCombinedUniqunessSet(listUniquness,len(self.layer[i]))
+            listNotUniquePC = self.getCliqueSetCombinedList(listUniquness,len(self.layer[i]))
             
             listDeletedPC= []
             for eachNotUnique in listNotUniquePC:
@@ -296,7 +297,6 @@ class NEURAL_NETWORK(object):
                 self.replaceIndex(i+1, eachNotUnique, smallestOne)
                 
                 listDeletedPC += eachNotUnique
-
             
             listDeletedPC.sort(reverse=True)
             self.adjustIndexByDelete(i+1, listDeletedPC)            
@@ -356,9 +356,9 @@ class NEURAL_NETWORK(object):
         
         return smallest    
             
-    def getListCombinedUniqunessSet(self,listUniqueness,sizeLayer):
-        if len(listUniqueness) < 3:
-            return listUniqueness
+    def getCliqueSetCombinedList(self,listToFindClique,sizeLayer):
+        if len(listToFindClique) < 3:
+            return listToFindClique
         
         def getCliquesN(adMat,sizeClique):            
             if sizeClique < 3:
@@ -427,9 +427,9 @@ class NEURAL_NETWORK(object):
              
         adMat = [[False for _ in range(sizeLayer)] for _ in range(sizeLayer)]
         
-        for eachListUniqueness in listUniqueness:
-            adMat[eachListUniqueness[0]][eachListUniqueness[1]] = True
-            adMat[eachListUniqueness[1]][eachListUniqueness[0]] = True
+        for eachlistToFindClique in listToFindClique:
+            adMat[eachlistToFindClique[0]][eachlistToFindClique[1]] = True
+            adMat[eachlistToFindClique[1]][eachlistToFindClique[0]] = True
 
         listClique = getCliquesN(adMat,sizeLayer)
         
@@ -450,19 +450,29 @@ class NEURAL_NETWORK(object):
         isNotExist = True
         numInserted = 0
         
-        
-        for singleIndex in testSet:
+        setNextLists = []
+
+        for singleIndex in testSet:            
             for i, singleSet in enumerate(setList):
                 if singleIndex in singleSet:
+                    tempList = copy.deepcopy(singleSet)
+                    tempList += testSet
+                    isNotExist = False
+                    break
+                 
+        
+            
                     print "TEST", testSet
                     print "SET", setList
                     
                     setList[i] += testSet
                     numInserted += 1
                     print numInserted
-                    isNotExist = False                    
+                    isNotExist = False
 
-        if numInserted > 1:            
+                    
+
+        if numInserted > 1:
             print "SET", setList
             def clearDuplicateSet(setList):
                 setNewLists = []
