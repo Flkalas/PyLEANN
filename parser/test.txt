@@ -1,0 +1,9 @@
+Ionosphere
+Iris
+Glass Identification
+Pen-Based Recognition of Handwritten Digits
+Statlog (Vehicle Silhouettes)
+Connectionist Bench
+Image Segmentation
+Wine
+Statlog (Image Segmentation)
