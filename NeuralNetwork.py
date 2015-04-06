@@ -151,8 +151,8 @@ class NEURAL_NETWORK(object):
             for j in range(maxLayer-1):
 #                 print eachParent
                 for k in range(len(eachParent.layer[j])):
-                    newPC = copy.deepcopy(eachParent.layer[j][k])
-                    newPC.adjustIndexesByParents(i,j,parents)
+                    newPC = copy.deepcopy(eachParent.layer[j][k])                    
+                    newPC.adjustIndexesByParents(i,j,extendedParents)
                     self.layer[j].append(newPC)
                     
         fuseLayer = [self.createFusingPerceptron(i, stacks, len(extendedParents[0].layer[maxLayer-2])) for i in range(sizeOutput)]
@@ -243,7 +243,7 @@ class NEURAL_NETWORK(object):
                 listToMerge = listToNext
                 listToNext = []
                 numConfirm = 0
-                                            
+
                 waitSetList = [True for _ in range(len(listToMerge))]
                 
                 for i,setBased in enumerate(listToMerge):
@@ -267,9 +267,9 @@ class NEURAL_NETWORK(object):
         
         
         #temp
-        listsSimilar = [list(eachItem) for eachItem in listSetSimilarity]
-        print listsSimilar
-        print listSimilarityPC
+#         listsSimilar = [list(eachItem) for eachItem in listSetSimilarity]
+#         print listsSimilar
+#         print listSimilarityPC
 #         listCilquePC =  self.getCliqueSetCombinedList(listsSimilar, len(self.layer[0]))
 #         
 #         if len(listCilquePC) != len(listSimilarityPC):
@@ -291,7 +291,7 @@ class NEURAL_NETWORK(object):
             deletedPClist += eachSet
             
         deletedPClist.sort(reverse=True)
-        print deletedPClist
+#         print deletedPClist
             
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)

@@ -145,6 +145,12 @@ class PERCEPTRON(object):
         if not self.checkAdjustTargetPosition(numParent, numLayer):
             return False
                     
+#         if len(parents) < numParent:
+#             print "parents out of range: ", numParent
+#         else: 
+#             if len(parents[numParent-1].layer) < numLayer:
+#                 print "layer out of range: ", numLayer
+                
         return self.adjustIndexesByValue(len(parents[numParent-1].layer[numLayer-1]))
             
     def adjustIndexesByValue(self,adjustValue):
