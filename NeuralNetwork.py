@@ -225,19 +225,61 @@ class NEURAL_NETWORK(object):
         
                 
     def degenSimilarity(self):
-        listSimilarity = []
+        listSetSimilarity = []
         
         for compareSet in itertools.combinations(range(len(self.layer[0])),2):
             compareSet = list(compareSet)
             if self.isSimilar(compareSet):
-                listSimilarity.append(list(compareSet))
+                listSetSimilarity.append(set(compareSet))
 
-        if len(listSimilarity) == 0:
+        if len(listSetSimilarity) == 0:
             return False
-        print listSimilarity
-    
-        listSimilarityPC = self.getCliqueSetCombinedList(listSimilarity,len(self.layer[0]))
+        
+        def mergeSimilarity(listSetSimilarity):            
+            numConfirm = 0
+            listToNext = listSetSimilarity
+            
+            while numConfirm != len(listToNext):
+                listToMerge = listToNext
+                listToNext = []
+                numConfirm = 0
+                                            
+                waitSetList = [True for _ in range(len(listToMerge))]
+                
+                for i,setBased in enumerate(listToMerge):
+                    for j, setTargeted in enumerate(listToMerge):
+                        if waitSetList[i] and waitSetList[j] and i != j:
+                            if len(setTargeted & setBased) > 0:
+                                listToNext.append(setTargeted|setBased)
+                                waitSetList[i] = False
+                                waitSetList[j] = False
+                                break
+                    if waitSetList[i]:
+                        listToNext.append(setBased)
+                        waitSetList[i] = False
+                        numConfirm += 1
+            
+            listSimilar = [list(eachItem) for eachItem in listToNext]
+                        
+            return listSimilar
+        
+        listSimilarityPC = mergeSimilarity(listSetSimilarity)
+        
+        
+        #temp
+        listsSimilar = [list(eachItem) for eachItem in listSetSimilarity]
+        print listsSimilar
         print listSimilarityPC
+#         listCilquePC =  self.getCliqueSetCombinedList(listsSimilar, len(self.layer[0]))
+#         
+#         if len(listCilquePC) != len(listSimilarityPC):
+#             print listCilquePC
+#             print "not same"
+#         while len(listCilquePC) != len(listSimilarityPC):
+#             pass
+        #temp end
+        
+        
         
         deletedPClist = [] 
         for eachSet in listSimilarityPC:                        
@@ -256,7 +298,7 @@ class NEURAL_NETWORK(object):
 
         self.checkIntegrity("Degen Similarity")
 
-        return len(listSimilarity) > 0
+        return len(listSetSimilarity) > 0
     
     def degenUniquness(self):        
         if self.getSizeLayer() < 3:
