@@ -79,23 +79,32 @@ class GENE_POOL(object):
         
         return len(self.genePool)
     
-    def checkLearningState(self):                
-        if self.maxPercentage > 0.95:            
-            if self.previousMaxPercentage == self.maxPercentage:
-                self.numGenStaturated += 1
-                if self.numGenStaturated < 10:
-                    print "\nThe best one is over 95.00% in " + str(self.numGenStaturated) + " time(s)!!!"
-                    return True
-                else:
-                    print "\nThe best is saturated. Learning is over."
-                    return False                          
-            else:
-                self.previousMaxPercentage = self.maxPercentage
-        
-        self.numGenStaturated = 0
+    def checkLearningState(self,isLimited=True,maxLimit=0.95):                
+        if isLimited and self.maxPercentage > maxLimit:            
+            return self.checkContinueousSaturated(True,maxLimit)            
+        else:
+            return self.checkContinueousSaturated(False) 
         
         return True
-    
+        
+    def checkContinueousSaturated(self,isLimited,maxLimit=0.95):
+        if self.previousMaxPercentage == self.maxPercentage:
+            self.numGenStaturated += 1
+            if self.numGenStaturated < 10:
+                if isLimited:
+                    print "\nThe best one is over " + str(maxLimit*100)+"% in " + str(self.numGenStaturated) + " time(s)!!!"
+                else:
+                    print "\nThe best one is saturated in " + str(self.numGenStaturated) + " time(s) with " + str(round(self.maxPercentage*100,2)) + "%!!!"
+                return True
+            else:
+                print "\nThe best is saturated. Learning is over."
+                return False                          
+        else:
+            self.previousMaxPercentage = self.maxPercentage
+            self.numGenStaturated = 0
+            
+        return True
+        
     def selection(self, indexOutput=-1, numToSelection=2):
         
         totalCount = 0

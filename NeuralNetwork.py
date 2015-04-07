@@ -265,7 +265,6 @@ class NEURAL_NETWORK(object):
         
         listSimilarityPC = mergeSimilarity(listSetSimilarity)
         
-        
         #temp
 #         listsSimilar = [list(eachItem) for eachItem in listSetSimilarity]
 #         print listsSimilar
@@ -278,8 +277,6 @@ class NEURAL_NETWORK(object):
 #         while len(listCilquePC) != len(listSimilarityPC):
 #             pass
         #temp end
-        
-        
         
         deletedPClist = [] 
         for eachSet in listSimilarityPC:                        

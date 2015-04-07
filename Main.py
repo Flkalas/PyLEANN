@@ -4,7 +4,7 @@ import ProblemPool
 def learningLeann(nameFile):
     prbPool = ProblemPool.PROBLEM_POOL(nameFile)  
     gp = GenePool.GENE_POOL()
-    gp.initGenePool(prbPool, 100)
+    gp.initGenePool(prbPool, 1000)
     generation = 0
     learningState = True
     
@@ -19,7 +19,7 @@ def learningLeann(nameFile):
     
             #gp.statLayerCount()
             gp.evaluation(False)
-            learningState = gp.checkLearningState()
+            learningState = gp.checkLearningState(False)
             
             gp.crossover()
             gp.mutation()
@@ -36,7 +36,7 @@ def learningLeann(nameFile):
                 learningState = False
 
 numTimes = 0
-while numTimes < 100:
-    learningLeann("./iris.csv")
-    numTimes += 1
-    print "\n" + str(numTimes) + " Simulation is ended."
+# while numTimes < 100:
+learningLeann("./iris.csv")
+numTimes += 1
+print "\n" + str(numTimes) + " Simulation is ended."
