@@ -23,20 +23,35 @@ class GENE_POOL(object):
         self.probMacroEvolution = 0.1
         self.probMicroEvolution = 0.2
         
-        self.previousMaxPercentage = 0 
+        self.numSolvePrb = 0
+        self.previousMaxPercentage = -1.0
+        self.numGenStaturated = 0
         
-    def doGame(self):
-        
-#         prbTime = []
-        for i in range(self.prbPool.sizeBank):            
-            prb = self.prbPool.getOneProblemFromBank(i)
+    def doGame(self,blockBank = -1, numBlock = 10):
+        if blockBank == -1:
+            self.excuteBlock(blockBank)
+        else:
+            for i in range(numBlock):
+                if i != blockBank:
+                    self.excuteBlock(i, numBlock)
+    
+    def excuteBlock(self,blockBank = -1, numBlock = 10):
+        if blockBank == -1:
+            blockStart = 0
+            blockEnd = self.prbPool.sizeBank
+        else:
+            blockStart = self.prbPool.sizeBank/numBlock*blockBank
+            blockEnd = self.prbPool.sizeBank/numBlock*(blockBank+1)
+
+        for j in range(blockStart, blockEnd):
+            self.numSolvePrb += 1 
+            prb = self.prbPool.getOneProblemFromBank(j)
+#             if j == blockStart:
+#                 print prb, blockStart
+#                 print self.prbPool.sizeBank, numBlock, blockBank
             for cell in self.genePool:
-#                 arrTime = [time.time()]
-                cell.solveProblem(prb)
-#                 arrTime.append(time.time())        
-#                 prbTime.append(arrTime[1]-arrTime[0])
-#         print numpy.mean(prbTime)
-        
+                cell.solveProblem(prb)                
+
         return 0
     
     def evaluation(self,enablePrintBest=False):        
@@ -63,6 +78,7 @@ class GENE_POOL(object):
     def resetCounter(self):
         for cell in self.genePool:
             cell.resetAllCounter()
+        self.numSolvePrb = 0
 
     def evaluationBiosystem(self):
         self.calSolvingPercentage()
@@ -80,8 +96,9 @@ class GENE_POOL(object):
         return len(self.genePool)
     
     def checkLearningState(self,isLimited=True,maxLimit=0.95):                
-        if isLimited and self.maxPercentage > maxLimit:            
-            return self.checkContinueousSaturated(True,maxLimit)            
+        if isLimited: 
+            if self.maxPercentage > maxLimit:            
+                return self.checkContinueousSaturated(True,maxLimit)            
         else:
             return self.checkContinueousSaturated(False) 
         
@@ -259,12 +276,12 @@ class GENE_POOL(object):
     def calSolvingPercentage(self):
         percentage = []
         for cell in self.genePool:
-                percentage.append(float(cell.getCountRight())/float(self.prbPool.sizeBank))
+                percentage.append(float(cell.getCountRight())/float(self.numSolvePrb))
             
         classPercentage = [[] for _ in range(self.prbPool.sizeY)]
         for i in range(self.prbPool.sizeY):
             for cell in self.genePool:
-                classPercentage[i].append(float(cell.getCount(i)/float(self.prbPool.sizeBank)))
+                classPercentage[i].append(float(cell.getCount(i)/float(self.numSolvePrb)))
                 
         self.maxPercentage = max(percentage)
         self.avgPercentage = numpy.mean(percentage)
@@ -326,6 +343,11 @@ class GENE_POOL(object):
                     break
                 
                 print i, j, sum(elements), elements
+                
+    def remainBestOne(self):
+        temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
+        self.genePool = [temp[0]] 
+        return copy.deepcopy(temp[0])
             
         
 
