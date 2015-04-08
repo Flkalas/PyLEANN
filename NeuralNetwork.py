@@ -301,7 +301,7 @@ class NEURAL_NETWORK(object):
         if self.getSizeLayer() < 3:
             return False
         
-        for i in range(1,len(self.layer)-1):            
+        for i in range(1,len(self.layer)-1):
             listUniquness = []
             
             for compareSet in itertools.combinations(range(len(self.layer[i])),2):
@@ -311,7 +311,13 @@ class NEURAL_NETWORK(object):
             if len(listUniquness) == 0:
                 return False
             
+            self.printLayer()
+            
+            print "layer: " + str(i) +", unique: " + str(listUniquness) 
+            
             listNotUniquePC = self.getCliqueSetCombinedList(listUniquness,len(self.layer[i]))
+            
+            print "layer: " + str(i) +", NotUni: " + str(listNotUniquePC)
             
             listDeletedPC= []
             for eachNotUnique in listNotUniquePC:
@@ -322,10 +328,15 @@ class NEURAL_NETWORK(object):
                 
                 listDeletedPC += eachNotUnique
             
+            print "layer: " + str(i) +", Delete: " + str(listDeletedPC)
+            
             listDeletedPC.sort(reverse=True)
             self.adjustIndexByDelete(i+1, listDeletedPC)            
             
             self.deletePerceptrons(i, listDeletedPC)
+        
+            self.printLayer()
+            self.checkIntegrity("MICRO UNIQUE")
         
         return len(listDeletedPC) > 0
     
@@ -584,7 +595,11 @@ class NEURAL_NETWORK(object):
                     ref.append(i) 
             
             setReferencedInNextLayer.append(set(ref))
+#             if len(ref) > 0:
             listFirstOneReference.append(ref[0])
+#             
+#         if len(listFirstOneReference) < 2:
+#             return True            
             
         for eachSet in setReferencedInNextLayer:
             if not self.isArrSameGate(eachSet, indexLayer):

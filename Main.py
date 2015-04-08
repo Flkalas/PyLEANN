@@ -74,7 +74,7 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
         
         
 numTimes = 0
-# while numTimes < 100:
-learningLeannCrossValidation("./iris.csv")
-numTimes += 1
-print "\n" + str(numTimes) + " Simulation is ended."
+while numTimes < 100:
+    learningLeannCrossValidation("./iris.csv")
+    numTimes += 1
+    print "\n" + str(numTimes) + " Simulation is ended."
