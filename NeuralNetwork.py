@@ -764,6 +764,13 @@ class NEURAL_NETWORK(object):
     
     def getSizeLayer(self):
         return len(self.layer)
+        
+    def getNumLayer(self):
+        return len(self.layer)
+        
+    def getNumTotalPerceptron(self):
+        eachNum = [len(self.layer[i]) for i in range(len(self.layer))]
+        return sum(eachNum)
     
     def getSizeOutput(self):
         return len(self.layer[len(self.layer)-1])

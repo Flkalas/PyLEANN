@@ -23,17 +23,52 @@ class LOGGER(object):
         
         return self.prefix
     
-    def getFileName(self):
-        pass
-    
-    def writeTrainPercent(self,numSimulation,numGeneration,percent,numBlock=-1):
-        pass
+    def getFileName(self,numSimulation,nameCategory,numBlock=-1):        
+        
+        strName = "_" +self.prefix + "_" + str(numSimulation)  + "_"
+        
+        if numBlock != -1:
+            strName += str(numBlock) + "_" 
             
-    def writeDiversity(self,numSimulation,numGeneration,content,numBlock=-1):
-        pass
-
-    def writeStructure(self,numSimulation,numBlock=-1):
-        pass
+        strName += nameCategory + ".csv"
+        
+        return strName
     
-    def writeTestPercent(self,numSimulation,numBlock=-1):
-        pass
+    def writeGenerationResult(self,numSimulation,numGeneration,nameCategory,strContent,numBlock=-1):
+        strFileName = self.getFileName(numSimulation,nameCategory,numBlock) 
+        
+        if numGeneration != 0:
+            modeFile = 'a'
+        else:
+            modeFile = 'w'
+        
+        fileOpend = open(strFileName,modeFile)
+        
+        strWrite = str(numGenration)+","+strContent        
+        fileOpend.write(strWrite)
+        
+        return fileOpend.close()
+    
+    def writeBlockResult(self,numSimulation,nameCategory,strContent,numBlock=-1):
+        strFileName = self.getFileName(numSimulation,nameCategory,numBlock) 
+        
+        fileOpend = open(strFileName,'w')
+        fileOpend.write(strContent)
+        
+        return fileOpend.close()
+    
+    def writeSimulationResult(self,numSimulation,nameCategory,strContent,numBlock=-1):
+        strFileName = self.getFileName(numSimulation,nameCategory) 
+        
+        if numBlock > 0:
+            modeFile = 'a'
+        else:
+            modeFile = 'w'
+        
+        strWrite = str(numBlock) + "," + strContent
+        
+        fileOpend = open(strFileName,modeFile)
+        fileOpend.write(strWrite)
+        
+        return fileOpend.close()
+    

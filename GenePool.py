@@ -285,13 +285,12 @@ class GENE_POOL(object):
                 
         self.maxPercentage = max(percentage)
         self.avgPercentage = numpy.mean(percentage)
+        self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY)],[numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY)]]
 
         #print self.prbPool.sizeBank
         print '\t {0:15} {1:3.5f} {2:3.5f}'.format("Total", round(max(percentage),5), round(numpy.mean(percentage),5))
         for i in range(self.prbPool.sizeY):            
-            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(max(classPercentage[i]),5), round(numpy.mean(classPercentage[i]),5))
-            
-                     
+            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(self.classPercentage[0][i],5), round(self.classPercentage[1][i],5))
         
     def adjProbability(self):
         pass
@@ -349,8 +348,64 @@ class GENE_POOL(object):
         self.genePool = [temp[0]] 
         return copy.deepcopy(temp[0])
             
+    def getStrGenerationPercent(self):    
+        strPercent = str(self.maxPercentage) +","+ str(self.avgPercentage) +","
+        for i in range(self.prbPool.sizeY):
+            self.classPercentage[0][i] +","+ self.classPercentage[1][i] +","
+                        
+        return strPercent
+    
+    def getStrDiversity(self):
         
-
+        maxNumLayer = self.findMaxNumLayer()
+        maxNumPerceptron = self.findMaxNumPerceptron()
+        
+        statCells = [[0 for _ in range(maxNumPerceptron)] for _ in range(maxNumLayer)]
+        for eachCell in self.genePool:
+            statCells[eachCell.getNumLayer()][eachCell.getNumTotalPerceptron()] += 1
+        
+        strDiversity = ""
+        for i in range(maxNumLayer):
+            for j in range(maxNumPerceptron):
+                if statCells[i][j] > 0:
+                    strDiversity += str(i+1)+"-"+str(j+1) +","+ str(statCells[i][j]) + ","
+                    
+        return strDiversity
+    
+    def findMaxNumLayer(self):
+        maxNumLayer = 0
+        
+        for eachCell in self.genePool:
+            nowNumLayer = eachCell.getNumLayer()
+            if nowNumLayer > maxNumLayer:
+                maxNumLayer = nowNumLayer
+                
+        return maxNumLayer
+    
+    def findMaxNumPerceptron(self):
+        maxNumPerceptron = 0
+        
+        for eachCell in self.genePool:
+            nowNumPerceptron = eachCell.getNumTotalPerceptron()
+            if nowNumPerceptron > maxNumPerceptron:
+                maxNumPerceptron = nowNumPerceptron
+                
+        return maxNumPerceptron
+    
+    def getStrStructureBest(self):
+        cellBest = self.genePool[0]
+        
+        strStructure = ""
+        for i, eachLayer in enumerate(cellBest.layer):
+            strStructure += "Layer," + str(i) + "\n"
+            for j, eachPerceptron in enumerate(eachLayer):
+                strStructure += ",Perceptron," + str(j) + "\n"
+                for k in range(eachPerceptron.weights):
+                    strStructure += ",,Index," + str(k) +",Input," + str(eachPerceptron.indexes[k]) +",Weights," +str(eachPerceptron.weights[k]) +"\n"
+        
+        return strStructure
+    
+    
 # prbPool = ProblemPool.PROBLEM_POOL("./balance.csv")
 # gp = GENE_POOL()
 # gp.initGenePool(prbPool, 100)
