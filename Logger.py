@@ -44,7 +44,7 @@ class LOGGER(object):
         
         fileOpend = open(strFileName,modeFile)
         
-        strWrite = str(numGenration)+","+strContent        
+        strWrite = str(numGeneration)+","+strContent        
         fileOpend.write(strWrite)
         
         return fileOpend.close()
