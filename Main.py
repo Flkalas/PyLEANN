@@ -53,6 +53,7 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
                 print "All dead"
                 break
             else:
+                
                 print "\n\tGeneration " + str(generation) + " is started. Pool size: "+ str(len(gp.genePool)) + "\n"
         
                 learningState = operateGenepool(gp,i,numBlock)

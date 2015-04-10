@@ -144,7 +144,8 @@ class NEURAL_NETWORK(object):
             
         stacks = [[[]for _ in range(len(extendedParents))] for _ in range(sizeOutput)]
         for i in range(eachParent.getSizeOutput()):
-            for j in range(len(extendedParents)):            
+            for j in range(len(extendedParents)):
+                
                 stacks[i][j].extend(extendedParents[j].getAllReferenced(i,maxLayer-1,maxLayer))
                 
         for i, eachParent in enumerate(extendedParents):
