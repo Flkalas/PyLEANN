@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "D:\eclipse\plugins\org.python.pydev_3.8.0.201409251235\pysrc\pydevd.py", line 2183, in <module>
+    globals = debugger.run(setup['file'], None, None)
+  File "D:\eclipse\plugins\org.python.pydev_3.8.0.201409251235\pysrc\pydevd.py", line 1622, in run
+    pydev_imports.execfile(file, globals, locals)  # execute the script
+  File "D:\Github\PyLEANN\Main.py", line 79, in <module>
+    learningLeannCrossValidation("./iris.csv")
+  File "D:\Github\PyLEANN\Main.py", line 59, in learningLeannCrossValidation
+    learningState = operateGenepool(gp,i,numBlock)
+  File "D:\Github\PyLEANN\Main.py", line 13, in operateGenepool
+    geenpool.evolution()
+  File "D:\Github\PyLEANN\GenePool.py", line 244, in evolution
+    self.genePool.append(self.microevolution(parents))
+  File "D:\Github\PyLEANN\GenePool.py", line 266, in microevolution
+    newCell.initbyMicevol(parents, self.prbPool)
+  File "D:\Github\PyLEANN\Cell.py", line 45, in initbyMicevol
+    super(CELL, self).initbyMicevol(parents)
+  File "D:\Github\PyLEANN\NeuralNetwork.py", line 148, in initbyMicevol
+    stacks[i][j].extend(extendedParents[j].getAllReferenced(i,maxLayer-1,maxLayer))
+IndexError: list index out of range
