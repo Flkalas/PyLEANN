@@ -52,16 +52,12 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
             if len(gp.genePool) < 1:
                 print "All dead"
                 break
-            else:
-                
-                print "\n\tGeneration " + str(generation) + " is started. Pool size: "+ str(len(gp.genePool)) + "\n"
-        
-                learningState = operateGenepool(gp,i,numBlock)
-                
+            else:                
+                print "\n\tGeneration " + str(generation) + " is started. Pool size: "+ str(len(gp.genePool)) + "\n"        
+                learningState = operateGenepool(gp,i,numBlock)                
                 print "\n\tGeneration " + str(generation) + " is Ended."
                 
-                generation += 1
-                
+                generation += 1                
                 if generation > 100:
                     print "\nGeneration is over a hundred. It is too long time... The simulation end."
                     learningState = False
@@ -72,8 +68,7 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
         gp.excuteBlock(i, numBlock)
         gp.evaluation(False)
         print "\n-------------------------------------------------------------------------------"
-        
-        
+                
 numTimes = 0
 while numTimes < 100:
     learningLeannCrossValidation("./iris.csv")
