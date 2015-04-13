@@ -351,24 +351,23 @@ class GENE_POOL(object):
     def getStrGenerationPercent(self):    
         strPercent = str(self.maxPercentage) +","+ str(self.avgPercentage) +","
         for i in range(self.prbPool.sizeY):
-            self.classPercentage[0][i] +","+ self.classPercentage[1][i] +","
+            strPercent += str(self.classPercentage[0][i]) +","+ str(self.classPercentage[1][i]) +","
                         
         return strPercent
     
-    def getStrDiversity(self):
-        
+    def getStrDiversity(self):        
         maxNumLayer = self.findMaxNumLayer()
         maxNumPerceptron = self.findMaxNumPerceptron()
         
         statCells = [[0 for _ in range(maxNumPerceptron)] for _ in range(maxNumLayer)]
         for eachCell in self.genePool:
-            statCells[eachCell.getNumLayer()][eachCell.getNumTotalPerceptron()] += 1
+            statCells[eachCell.getNumLayer()-1][eachCell.getNumTotalPerceptron()-1] += 1
         
         strDiversity = ""
         for i in range(maxNumLayer):
             for j in range(maxNumPerceptron):
                 if statCells[i][j] > 0:
-                    strDiversity += str(i+1)+"-"+str(j+1) +","+ str(statCells[i][j]) + ","
+                    strDiversity += str(i+1)+"_"+str(j+1) +","+ str(statCells[i][j]) + ","
                     
         return strDiversity
     
@@ -400,7 +399,7 @@ class GENE_POOL(object):
             strStructure += "Layer," + str(i) + "\n"
             for j, eachPerceptron in enumerate(eachLayer):
                 strStructure += ",Perceptron," + str(j) + "\n"
-                for k in range(eachPerceptron.weights):
+                for k in range(len(eachPerceptron.weights)):
                     strStructure += ",,Index," + str(k) +",Input," + str(eachPerceptron.indexes[k]) +",Weights," +str(eachPerceptron.weights[k]) +"\n"
         
         return strStructure

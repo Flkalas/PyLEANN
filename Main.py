@@ -1,11 +1,15 @@
+import Logger
 import GenePool
 import ProblemPool
 
-def operateGenepool(geenpool, blockBank = -1, numBlock = 10):
+def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  blockBank = -1, numBlock = 10):
     geenpool.doGame(blockBank,numBlock)
 
     #gp.statLayerCount()
     geenpool.evaluation(False)
+#     numSimulation,numGeneration,nameCategory,strContent,numBlock=-1
+    logger.writeGenerationResult(numSimulation,numGeneration,"Percent",geenpool.getStrGenerationPercent(),blockBank)
+    logger.writeGenerationResult(numSimulation,numGeneration,"Diversity",geenpool.getStrDiversity(),blockBank)
     learningState = geenpool.checkLearningState(True)
     
     geenpool.crossover()
@@ -40,9 +44,12 @@ def learningLeann(nameFile):
                 print "\nGeneration is over a hundred. It is too long time... The simulation end."
                 learningState = False
 
-def learningLeannCrossValidation(nameFile, numBlock = 10):
-    for i in range(numBlock):        
-        prbPool = ProblemPool.PROBLEM_POOL(nameFile)  
+def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
+    antLogger = Logger.LOGGER()
+    antLogger.initLogger(activate=True)    
+    
+    for i in range(numBlock):
+        prbPool = ProblemPool.PROBLEM_POOL(nameFile)
         gp = GenePool.GENE_POOL()
         gp.initGenePool(prbPool, 100)
         generation = 0
@@ -54,7 +61,7 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
                 break
             else:                
                 print "\n\tGeneration " + str(generation) + " is started. Pool size: "+ str(len(gp.genePool)) + "\n"        
-                learningState = operateGenepool(gp,i,numBlock)                
+                learningState = operateGenepool(gp,antLogger,numSimulation,generation,i,numBlock)                
                 print "\n\tGeneration " + str(generation) + " is Ended."
                 
                 generation += 1                
@@ -67,10 +74,12 @@ def learningLeannCrossValidation(nameFile, numBlock = 10):
         gp.resetCounter()        
         gp.excuteBlock(i, numBlock)
         gp.evaluation(False)
+        antLogger.writeBlockResult(numSimulation, "Train_Best", gp.getStrStructureBest(), i)
+        antLogger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), i)
         print "\n-------------------------------------------------------------------------------"
-                
+
 numTimes = 0
 while numTimes < 100:
-    learningLeannCrossValidation("./iris.csv")
+    learningLeannCrossValidation("./iris.csv", numSimulation=numTimes)
     numTimes += 1
     print "\n" + str(numTimes) + " Simulation is ended."
