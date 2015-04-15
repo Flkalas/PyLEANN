@@ -48,7 +48,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
     antLogger = Logger.LOGGER()
     antLogger.initLogger(activate=True)    
     
-    for i in range(numBlock):
+    for i in range(1):
         prbPool = ProblemPool.PROBLEM_POOL(nameFile)
         gp = GenePool.GENE_POOL()
         gp.initGenePool(prbPool, 100)
@@ -61,7 +61,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
                 break
             else:                
                 print "\n\tGeneration " + str(generation) + " is started. Pool size: "+ str(len(gp.genePool)) + "\n"        
-                learningState = operateGenepool(gp,antLogger,numSimulation,generation,i,numBlock)                
+                learningState = operateGenepool(gp,antLogger,numSimulation,generation,-1,numBlock)                
                 print "\n\tGeneration " + str(generation) + " is Ended."
                 
                 generation += 1                

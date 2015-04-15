@@ -120,6 +120,8 @@ class PROBLEM_POOL(object):
         
         return prb
 
+    def fixCrossValidation(self):
+        
      
     
 # prbPool = PROBLEM_POOL("./balance.csv")
