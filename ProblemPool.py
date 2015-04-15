@@ -12,9 +12,9 @@ def isFloat(string):
 
 class PROBLEM_POOL(object):
     def __init__(self, nameFile):
-        self.createBankFromFile(nameFile)
+        pass
                 
-    def createBankFromFile(self,nameFile):
+    def initFromFile(self,nameFile,onCrossValid=False,numBlock=10):
         with open(nameFile) as streamFile:
             totalSize = len(re.split(',| ',streamFile.readline().rstrip('\n')))            
             bank = [[] for _ in range(totalSize)]
@@ -35,7 +35,7 @@ class PROBLEM_POOL(object):
             self.bankX.append(bank[i])                                
         self.sizeX = len(self.bankX)
                 
-        self.bankXIsNumerical = [True for _ in range(self.sizeX)]        
+        self.bankXIsNumerical = [True for _ in range(self.sizeX)]
         
         #Judge numeric
         for i in range(self.sizeX):
@@ -80,14 +80,25 @@ class PROBLEM_POOL(object):
         self.sizeY = len(self.nameY)
         self.bankY = [[] for _ in range(self.sizeY)]
         
-        for i in range(len(bank[0])):
-            classes = 1 << self.nameY[bank[0][i]]            
-            for j in range(len(self.bankY)):                
-                self.bankY[j].append((classes&(1<<j))>>j)
+        for i in range(len(bank[0])):            
+            decodeList = self.convertNumToClass(self.nameY[bank[0][i]],self.sizeY)
+            for j, eachIndex in enumerate(decodeList):
+                self.bankY[j].append(eachIndex)
                 
-        self.nameY = {v: k for k, v in self.nameY.items()}        
+        self.nameY = {v: k for k, v in self.nameY.items()}
+        
+        if onCrossValid:
+            self.fixCrossValidation(numBlock)
         
         return 0
+        
+    def convertNumToClass(self,numClass,sizeClasses):
+        returnList = []
+        numSifted = 1 << numClass
+        for j in range(sizeClasses):
+            returnList.append((numSifted&(1<<j))>>j)
+                
+        return returnList
 
     def getPointsInProblemBox(self,numPoints):
         points = []
@@ -120,11 +131,57 @@ class PROBLEM_POOL(object):
         
         return prb
 
-    def fixCrossValidation(self):
+    def fixCrossValidation(self,numBlock=10):
+        #divide classes
+        #self.bankX[i][prbIndex]
+        #self.bankY[i][prbIndex]
+        import math
         
+        newClassBank = [[] for _ in range(self.sizeY)]
+        
+        print self.sizeBank
+        for i in range(self.sizeBank):
+            
+            prb = self.getOneProblemFromBank(i)
+            for j, onClass in enumerate(prb[1]):
+                if onClass == 1:
+                    newClassBank[j].append(prb)
+        
+        #make blocks
+        newBlockBank = [[] for _ in range(numBlock)]
+        for eachClassBank in newClassBank:
+            # under 10 class repeats
+            numClassAttr = len(eachClassBank)
+            numRepeat = int(math.ceil(float(numBlock)/float(numClassAttr)))
+            indexProcess = 0
+            print numRepeat, numClassAttr
+            for i in range(numRepeat*numClassAttr):
+                newBlockBank[indexProcess%numBlock].append(eachClassBank[indexProcess%numClassAttr])
+                indexProcess += 1
+                
+        #stack each block
+        newBanks = []
+        newBanks.append([[] for _ in range(self.sizeX)])
+        newBanks.append([[] for _ in range(self.sizeY)])
+        for eachBlock in newBlockBank:
+            for eachAttr in eachBlock:
+                for i, eachSection in enumerate(eachAttr):
+                    for j, eachValue in enumerate(eachSection):
+                        newBanks[i][j].append(eachValue)
+        
+        self.bankX = newBanks[0]
+        self.bankY = newBanks[1]
      
+    def printAllBank(self):
+        for i in range(self.sizeBank):
+            print self.getOneProblemFromBank(i)
     
-# prbPool = PROBLEM_POOL("./balance.csv")
+prbPool = PROBLEM_POOL("./iris.csv")
+prbPool.printAllBank()
+dump = raw_input("View")
+prbPool.fixCrossValidation()
+prbPool.printAllBank()
+
 # print prbPool.getPointsInProblemBox(5)
 # print prbPool.getOneProblemFromBank(5)
 # print prbPool.getRandomProblemFromBank()

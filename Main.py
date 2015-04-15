@@ -26,7 +26,7 @@ def learningLeann(nameFile):
     gp.initGenePool(prbPool, 100)
     generation = 0
     learningState = True
-             
+    
     while learningState:
         if len(gp.genePool) < 1:
             print "All dead"
@@ -49,7 +49,9 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
     antLogger.initLogger(activate=True)    
     
     for i in range(1):
-        prbPool = ProblemPool.PROBLEM_POOL(nameFile)
+        prbPool = ProblemPool.PROBLEM_POOL()
+        prbPool.initFromFile(nameFile,True,numBlock)
+                
         gp = GenePool.GENE_POOL()
         gp.initGenePool(prbPool, 100)
         generation = 0
