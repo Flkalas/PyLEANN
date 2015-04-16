@@ -2,7 +2,7 @@ class LOGGER(object):
     def __init__(self):
         pass
     
-    def initLogger(self,pathBasic="./results/",activate=True):
+    def initLogger(self,pathBasic="../results/",activate=True):
         self.pathBasic = pathBasic
         self.findPrefixNumber()
         self.activated = activate

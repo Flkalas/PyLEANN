@@ -11,7 +11,7 @@ def isFloat(string):
         return True
 
 class PROBLEM_POOL(object):
-    def __init__(self, nameFile):
+    def __init__(self):
         pass
                 
     def initFromFile(self,nameFile,onCrossValid=False,numBlock=10):
@@ -139,7 +139,7 @@ class PROBLEM_POOL(object):
         
         newClassBank = [[] for _ in range(self.sizeY)]
         
-        print self.sizeBank
+#         print self.sizeBank
         for i in range(self.sizeBank):
             
             prb = self.getOneProblemFromBank(i)
@@ -154,7 +154,7 @@ class PROBLEM_POOL(object):
             numClassAttr = len(eachClassBank)
             numRepeat = int(math.ceil(float(numBlock)/float(numClassAttr)))
             indexProcess = 0
-            print numRepeat, numClassAttr
+#             print numRepeat, numClassAttr
             for i in range(numRepeat*numClassAttr):
                 newBlockBank[indexProcess%numBlock].append(eachClassBank[indexProcess%numClassAttr])
                 indexProcess += 1
@@ -176,11 +176,11 @@ class PROBLEM_POOL(object):
         for i in range(self.sizeBank):
             print self.getOneProblemFromBank(i)
     
-prbPool = PROBLEM_POOL("./iris.csv")
-prbPool.printAllBank()
-dump = raw_input("View")
-prbPool.fixCrossValidation()
-prbPool.printAllBank()
+# prbPool = PROBLEM_POOL("./iris.csv")
+# prbPool.printAllBank()
+# dump = raw_input("View")
+# prbPool.fixCrossValidation()
+# prbPool.printAllBank()
 
 # print prbPool.getPointsInProblemBox(5)
 # print prbPool.getOneProblemFromBank(5)
