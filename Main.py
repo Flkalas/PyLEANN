@@ -84,10 +84,10 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         print "\n-------------------------------------------------------------------------------"
 
 nameFile = "./iris.csv"
-# if len(sys.argv) > 1:
-    # nameFile = sys.argv[1]
-    # if not os.path.isfile(nameFile):
-        # nameFile = "./iris.csv"
+if len(sys.argv) > 1:
+    nameFile = sys.argv[1]
+    if not os.path.isfile(nameFile):
+        nameFile = "./iris.csv"
 print sys.argv
         
 numTimes = 0
