@@ -1,3 +1,6 @@
+import os
+import sys
+
 import Logger
 import GenePool
 import ProblemPool
@@ -80,8 +83,17 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         antLogger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), i)
         print "\n-------------------------------------------------------------------------------"
 
+nameFile = "./iris.csv"
+# if len(sys.argv) > 1:
+    # nameFile = sys.argv[1]
+    # if not os.path.isfile(nameFile):
+        # nameFile = "./iris.csv"
+print sys.argv
+        
 numTimes = 0
 while numTimes < 100:
-    learningLeannCrossValidation("./iris.csv", numSimulation=numTimes)
+    learningLeannCrossValidation(nameFile, numSimulation=numTimes)
     numTimes += 1
     print "\n" + str(numTimes) + " Simulation is ended."
+
+    
