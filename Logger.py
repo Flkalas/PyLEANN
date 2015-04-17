@@ -2,25 +2,26 @@ class LOGGER(object):
     def __init__(self):
         pass
     
-    def initLogger(self,pathBasic="../results/",activate=True):
+    def initLogger(self,nameTestFile,pathBasic="../results/",activate=True):
         self.pathBasic = pathBasic
-        self.findPrefixNumber()
+        self.findPrefixNumber(nameTestFile)
         self.activated = activate
 
-    def writePrefixFile(self):
-        fileOpened = open(self.pathBasic +"_"+ str(self.prefix) + ".checker",'w')
+    def writePrefixFile(self,nameTestFile):
+        fileOpened = open(self.pathBasic +"_"+ str(self.prefix) + ".txt",'w')
+        fileOpened.write(nameTestFile)
         fileOpened.close()
         pass
             
-    def findPrefixNumber(self):
+    def findPrefixNumber(self,nameTestFile):
         import os
         
         i = 0
-        while os.path.isfile(self.pathBasic +"_"+ str(i) + ".checker"):
+        while os.path.isfile(self.pathBasic +"_"+ str(i) + ".txt"):
             i += 1
         
         self.prefix = i        
-        self.writePrefixFile()
+        self.writePrefixFile(nameTestFile)
         
         return self.prefix
     
