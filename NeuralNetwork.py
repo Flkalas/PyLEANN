@@ -41,6 +41,8 @@ class NEURAL_NETWORK(object):
         
     def initbyRnas(self, parents):
         
+        print parents
+        
         sizeLayer = []        
         for parent in parents:
             sizeLayer.append(parent.getSizeLayer())

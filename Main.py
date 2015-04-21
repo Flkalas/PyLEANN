@@ -56,7 +56,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         prbPool.initFromFile(nameFile,True,numBlock)
                 
         gp = GenePool.GENE_POOL()
-        gp.initGenePool(prbPool, 100)
+        gp.initGenePool(prbPool, 10000)
         generation = 0
         learningState = True
         
@@ -83,7 +83,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         antLogger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), i)
         print "\n-------------------------------------------------------------------------------"
 
-nameFile = "./iris.csv"
+nameFile = "./segmentation.csv"
 if len(sys.argv) > 1:
     nameFile = sys.argv[1]
     if not os.path.isfile(nameFile):
