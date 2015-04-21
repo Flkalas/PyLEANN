@@ -26,7 +26,7 @@ def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  bloc
 def learningLeann(nameFile):
     prbPool = ProblemPool.PROBLEM_POOL(nameFile)  
     gp = GenePool.GENE_POOL()
-    gp.initGenePool(prbPool, 100)
+    gp.initGenePool(prbPool, 1000)
     generation = 0
     learningState = True
     
@@ -56,7 +56,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         prbPool.initFromFile(nameFile,True,numBlock)
                 
         gp = GenePool.GENE_POOL()
-        gp.initGenePool(prbPool, 100)
+        gp.initGenePool(prbPool, 1000)
         generation = 0
         learningState = True
         
