@@ -338,7 +338,7 @@ class NEURAL_NETWORK(object):
             
             self.deletePerceptrons(i, listDeletedPC)
         
-            self.printLayer()
+#             self.printLayer()
             self.checkIntegrity("MICRO UNIQUE")
         
         return len(listDeletedPC) > 0

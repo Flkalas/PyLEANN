@@ -175,6 +175,9 @@ class PROBLEM_POOL(object):
     def printAllBank(self):
         for i in range(self.sizeBank):
             print self.getOneProblemFromBank(i)
+            
+    def normalizer(self):
+        for i in 
     
 # prbPool = PROBLEM_POOL("./iris.csv")
 # prbPool.printAllBank()
