@@ -56,9 +56,9 @@ class GENE_POOL(object):
     
     def evaluation(self,enablePrintBest=False):        
         newGenePool = []
-        bankSize = self.initPopu/(self.prbPool.sizeY+2)
+        bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
-        for i in range(-1, self.prbPool.sizeY):
+        for i in range(-2, self.prbPool.sizeY):
             temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
             newGenePool += copy.deepcopy(temp[0:bankSize])
             #print i, temp[0]
@@ -77,7 +77,7 @@ class GENE_POOL(object):
     
     def evaluationLR(self,enablePrintBest=False):
         newGenePool = []
-        bankSize = self.initPopu/(self.prbPool.sizeY+2)
+        bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
         for i in range(-1, self.prbPool.sizeY):
             for _ in range(bankSize):

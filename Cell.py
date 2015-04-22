@@ -9,7 +9,7 @@ import ProblemPool
 class CELL(NeuralNetwork.NEURAL_NETWORK):
     def __str__(self):
         infoStr = "Feeds\n"
-        infoStr += str(self.countRight) + " " + str(self.countFeedRate)+ "\n\n"
+        infoStr += str(self.countFeedRate)+ "\n\n"
         
         infoStr += "Neural Network\n"
         for i in range(len(self.layer)):
@@ -55,8 +55,7 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         
     def initFeeds(self,sizeY):
         self.feeds = [0 for _ in range(sizeY)]
-        self.countFeedRate = [0 for _ in range(sizeY)]
-        self.countRight = 0
+        self.countFeedRate = [0 for _ in range(sizeY+1)]        
         
     def initSights(self,prbPool,numLayer=1):
         self.sights = [Sight.SIGHT() for _ in range(prbPool.sizeY)]
@@ -69,16 +68,16 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         for i in range(len(prb[1])):            
             if self.sights[i].isInSight(prb[0]):
                 if answer[i] == prb[1][i]:
-                    self.countFeedRate[i] += 1
+                    self.countFeedRate[i+1] += 1
                 else:
                     boolRight = False
             else:
                 boolRight = False
                 
         if boolRight:
-            self.countRight += 1
+            self.countFeedRate[0] += 1
     
-    def gainFeed(self,indexFeed,valFeed):        
+    def gainFeed(self,indexFeed,valFeed):
         self.feeds[indexFeed] += valFeed
         
         return self.feeds[indexFeed]
@@ -119,9 +118,13 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
                     
     def getCount(self,indexCount=-1):
         if indexCount == -1:
+            return sum(self.countFeedRate)-self.countFeedRate[0]
+        elif indexCount == -2:
             return sum(self.countFeedRate)
+        elif indexCount < len(self.countFeedRate):
+            return self.countFeedRate[indexCount+1] 
         else:
-            return self.countFeedRate[indexCount]
+            return 0
         
     def getArrayClassCount(self):
         return self.countFeedRate
@@ -139,10 +142,9 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         return sums
         
     def getCountRight(self):
-        return self.countRight
+        return self.countFeedRate[0]
     
-    def resetAllCounter(self):
-        self.countRight = 0
+    def resetAllCounter(self):        
         self.countFeedRate = [0 for _ in range(len(self.countFeedRate))]
         
     def checkHaveDebt(self):

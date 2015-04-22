@@ -26,7 +26,7 @@ class SIGHT(object):
         baseSight = sum(rangeDimension)**(1.0/2.0)
         baseSight /= 3.0**2
         baseSight *= float(numLayer)**2
-        self.sight = abs(random.normalvariate(baseSight,0.2))
+        self.sight = abs(random.normalvariate(baseSight,0.3))
         
 #         for subRange in prbPool.rangeX:
 #             avgList.append(sum(subRange))
