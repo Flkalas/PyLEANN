@@ -41,7 +41,7 @@ class NEURAL_NETWORK(object):
         
     def initbyRnas(self, parents):
         
-        print parents
+#         print parents
         
         sizeLayer = []        
         for parent in parents:
@@ -314,13 +314,13 @@ class NEURAL_NETWORK(object):
             if len(listUniquness) == 0:
                 return False
             
-            self.printLayer()
+#             self.printLayer()
             
-            print "layer: " + str(i) +", unique: " + str(listUniquness) 
+#             print "layer: " + str(i) +", unique: " + str(listUniquness) 
             
             listNotUniquePC = self.getCliqueSetCombinedList(listUniquness,len(self.layer[i]))
             
-            print "layer: " + str(i) +", NotUni: " + str(listNotUniquePC)
+#             print "layer: " + str(i) +", NotUni: " + str(listNotUniquePC)
             
             listDeletedPC= []
             for eachNotUnique in listNotUniquePC:
@@ -331,7 +331,7 @@ class NEURAL_NETWORK(object):
                 
                 listDeletedPC += eachNotUnique
             
-            print "layer: " + str(i) +", Delete: " + str(listDeletedPC)
+#             print "layer: " + str(i) +", Delete: " + str(listDeletedPC)
             
             listDeletedPC.sort(reverse=True)
             self.adjustIndexByDelete(i+1, listDeletedPC)            
@@ -807,6 +807,8 @@ class NEURAL_NETWORK(object):
             return True
         else:
             return False
+        
+
     
 # prbPool = ProblemPool.PROBLEM_POOL("./balance.csv")  
 # nn = NEURAL_NETWORK()

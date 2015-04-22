@@ -164,6 +164,7 @@ class PERCEPTRON(object):
         
         newWeight = random.normalvariate(self.weights[indexMutateWeight],0.1)
         self.weights[indexMutateWeight] = newWeight
+        self.inputClear()
         
         return newWeight        
         
@@ -172,6 +173,7 @@ class PERCEPTRON(object):
         
         newIndex = random.randint(0,maxIndex-1)
         self.indexes[indexMutateIndex] = newIndex
+        self.inputClear()
         
         return newIndex
     

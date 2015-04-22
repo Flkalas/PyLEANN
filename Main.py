@@ -9,7 +9,7 @@ def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  bloc
     geenpool.doGame(blockBank,numBlock)
 
     #gp.statLayerCount()
-    geenpool.evaluation(False)
+    geenpool.evaluation(True)
 #     numSimulation,numGeneration,nameCategory,strContent,numBlock=-1
     logger.writeGenerationResult(numSimulation,numGeneration,"Percent",geenpool.getStrGenerationPercent(),blockBank)
     logger.writeGenerationResult(numSimulation,numGeneration,"Diversity",geenpool.getStrDiversity(),blockBank)
@@ -56,7 +56,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         prbPool.initFromFile(nameFile,True,numBlock)
                 
         gp = GenePool.GENE_POOL()
-        gp.initGenePool(prbPool, 10000)
+        gp.initGenePool(prbPool, 100)
         generation = 0
         learningState = True
         
@@ -83,7 +83,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
         antLogger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), i)
         print "\n-------------------------------------------------------------------------------"
 
-nameFile = "./segmentation.csv"
+nameFile = "./iris.csv"
 if len(sys.argv) > 1:
     nameFile = sys.argv[1]
     if not os.path.isfile(nameFile):

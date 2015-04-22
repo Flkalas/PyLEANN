@@ -86,6 +86,7 @@ class PROBLEM_POOL(object):
                 self.bankY[j].append(eachIndex)
                 
         self.nameY = {v: k for k, v in self.nameY.items()}
+        self.normalizer()
         
         if onCrossValid:
             self.fixCrossValidation(numBlock)
@@ -177,12 +178,27 @@ class PROBLEM_POOL(object):
             print self.getOneProblemFromBank(i)
             
     def normalizer(self):
-        for i in 
+        
+        
+        minTarget = -1.0
+        maxTarget = 1.0
+        
+        for i in range(self.sizeX):
+            #get max min
+            maxBank = max(self.bankX[i])
+            minBank = min(self.bankX[i])
+            
+            for j, eachItem in enumerate(self.bankX[i]):
+                self.bankX[i][j] = (eachItem - minBank)/(maxBank/(maxTarget-minTarget))+minTarget
+                
+        self.rangeX = [[minTarget,maxTarget] for _ in range(self.sizeX)]
     
-# prbPool = PROBLEM_POOL("./iris.csv")
+# prbPool = PROBLEM_POOL()
+# prbPool.initFromFile("./iris.csv")
 # prbPool.printAllBank()
 # dump = raw_input("View")
-# prbPool.fixCrossValidation()
+# prbPool.normalizer()
+# prbPool.printAllBank()
 # prbPool.printAllBank()
 
 # print prbPool.getPointsInProblemBox(5)

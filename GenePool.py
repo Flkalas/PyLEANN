@@ -63,10 +63,26 @@ class GENE_POOL(object):
             newGenePool += copy.deepcopy(temp[0:bankSize])
             #print i, temp[0]
                     
-        temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
-        newGenePool += copy.deepcopy(temp[0:bankSize])
+#         temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
+#         newGenePool += copy.deepcopy(temp[0:bankSize])
         #print "-1" + str(temp[0])
         
+        if enablePrintBest:
+            print newGenePool[0]
+        self.calSolvingPercentage()
+                        
+        self.genePool = newGenePool
+        
+        return len(self.genePool)
+    
+    def evaluationLR(self,enablePrintBest=False):
+        newGenePool = []
+        bankSize = self.initPopu/(self.prbPool.sizeY+1)
+        
+        for i in range(-1, self.prbPool.sizeY):
+            for _ in range(bankSize):
+                newGenePool.append(object)
+            
         if enablePrintBest:
             print newGenePool[0]        
         self.calSolvingPercentage()

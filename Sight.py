@@ -18,11 +18,20 @@ class SIGHT(object):
         
         self.center = prbPool.getSinglePointsInProblemBox()
         
+        rangeDimension = []
         avgList = []
-        for subRange in prbPool.rangeX:
-            avgList.append(sum(subRange))
-        baseSight = float(sum(avgList)/len(avgList)/3*numLayer)        
-        self.sight = abs(random.normalvariate(baseSight,1))
+        for i in range(prbPool.sizeX):            
+            rangeDimension.append(((prbPool.rangeX[i][1] - prbPool.rangeX[i][0])/2.0)**2)
+            
+        baseSight = sum(rangeDimension)**(1.0/2.0)
+        baseSight /= 3.0**2
+        baseSight *= float(numLayer)**2
+        self.sight = abs(random.normalvariate(baseSight,0.2))
+        
+#         for subRange in prbPool.rangeX:
+#             avgList.append(sum(subRange))
+#         baseSight = float(sum(avgList)/len(avgList)/3*numLayer)
+#         self.sight = abs(random.normalvariate(baseSight,1))
         
         return 0
         
