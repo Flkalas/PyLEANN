@@ -9,7 +9,7 @@ def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  bloc
     geenpool.doGame(blockBank,numBlock)
 
     #gp.statLayerCount()
-    geenpool.evaluation(True)
+    geenpool.evaluationLR(False)
 #     numSimulation,numGeneration,nameCategory,strContent,numBlock=-1
     logger.writeGenerationResult(numSimulation,numGeneration,"Percent",geenpool.getStrGenerationPercent(),blockBank)
     logger.writeGenerationResult(numSimulation,numGeneration,"Diversity",geenpool.getStrDiversity(),blockBank)

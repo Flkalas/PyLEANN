@@ -58,13 +58,10 @@ class GENE_POOL(object):
         newGenePool = []
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
-        for i in range(-2, self.prbPool.sizeY):
+        for i in range(-2, self.prbPool.sizeY+1):
             temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
             newGenePool += copy.deepcopy(temp[0:bankSize])
             #print i, temp[0]
-                    
-        temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
-        newGenePool += copy.deepcopy(temp[0:bankSize])
         #print "-1" + str(temp[0])
         
         if enablePrintBest:
@@ -77,17 +74,26 @@ class GENE_POOL(object):
     
     def evaluationLR(self,enablePrintBest=False):
         newGenePool = []
+        for i in range(-2, self.prbPool.sizeY+1):
+            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
+            newGenePool.append(copy.deepcopy(temp[0]))        
+#         print len(newGenePool)
+        
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
-        for i in range(-1, self.prbPool.sizeY):
-            for _ in range(bankSize):
-                newGenePool.append(object)
+        for i in range(-2, self.prbPool.sizeY+1):
+            listSelected = copy.deepcopy(self.selection(i,bankSize))
+#             print "\t", i, len(listSelected)
+            newGenePool += listSelected
             
         if enablePrintBest:
+            self.genePool.sort(key=lambda cell: cell.getCount(0), reverse=True)
             print newGenePool[0]
+                    
         self.calSolvingPercentage()
-                        
         self.genePool = newGenePool
+        
+#         print bankSize, len(self.genePool)
         
         return len(self.genePool)
 
@@ -139,43 +145,69 @@ class GENE_POOL(object):
         return True
         
     def selection(self, indexOutput=-1, numToSelection=2):
-        
-        totalCount = 0
-        
+        self.genePool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=True)
+                
+        totalCount = len(self.genePool)
         for cell in self.genePool:
             totalCount += cell.getCount(indexOutput)
-            
+                        
         selected = []
-
         for _ in range(numToSelection):
             selected.append(random.randint(0,totalCount))
             
         selected = sorted(selected)
         
         adjustSel = [selected[0]]
+        adjustSel += [selected[i+1] - selected[i] for i in range(len(selected)-1)] 
         
-        for i in range(1,len(selected)):
-            adjustSel.append(selected[i]-selected[i-1]) 
+#         print "total: ", totalCount
+#         print "nor selected: ", selected
+#         print "adj selected: ", adjustSel
 
         selectedCell = []
-        i = 0
-        j = 0
-                
-        while i < numToSelection:
-            cell = self.genePool[j]
-            cnt = cell.getCount(indexOutput)
-            if cnt > adjustSel[i]:
-                selectedCell.append(cell)
-                i += 1
-            else:
-                adjustSel[i] -= cnt
-            
-            j += 1
-            if j == len(self.genePool):
-                selectedCell.append(cell)
-                break
+        indexGenePool = 0
+        prevDebt = 0
+        for eachSel in adjustSel:
+#             print "\tstart: ", eachSel
+            eachSel += prevDebt
+#             print "\tpre  : ", eachSel
 
-        return selectedCell[0:2]
+            if eachSel < 1:
+#                 print "\tsame : ", eachSel
+                selectedCell.append(copy.deepcopy(self.genePool[indexGenePool-1]))
+                prevDebt = eachSel
+                continue
+            else:                
+                for indexNow, eachCell in enumerate(self.genePool[indexGenePool:]):
+                    eachSel -= eachCell.getCount(indexOutput)+1
+#                     print "\tproc : ", eachSel
+                    if eachSel < 1:
+                        selectedCell.append(copy.deepcopy(eachCell))
+                        indexGenePool = indexNow+1
+                        prevDebt = eachSel
+                        break
+        
+#         print "\t\tTotal: ", len(selectedCell)
+#         print "selected cell: ", selectedCell
+
+#         i = 0
+#         j = 0
+#                 
+#         while i < numToSelection:
+#             cell = self.genePool[j]
+#             cnt = cell.getCount(indexOutput)
+#             if cnt > adjustSel[i]:
+#                 selectedCell.append(cell)
+#                 i += 1
+#             else:
+#                 adjustSel[i] -= cnt
+#             
+#             j += 1
+#             if j == len(self.genePool):
+#                 selectedCell.append(cell)
+#                 break
+
+        return selectedCell[0:numToSelection]
     
     def selectionByFeed(self, indexOutput=-1, numToSelection=2):
         
@@ -290,23 +322,20 @@ class GENE_POOL(object):
         return newCell        
     
     def calSolvingPercentage(self):
-        percentage = []
-        for cell in self.genePool:
-                percentage.append(float(cell.getCountRight())/float(self.numSolvePrb))
-            
-        classPercentage = [[] for _ in range(self.prbPool.sizeY)]
-        for i in range(self.prbPool.sizeY):
+        classPercentage = [[] for _ in range(self.prbPool.sizeY+1)]
+        for i in range(self.prbPool.sizeY+1):
             for cell in self.genePool:
                 classPercentage[i].append(float(cell.getCount(i)/float(self.numSolvePrb)))
                 
-        self.maxPercentage = max(percentage)
-        self.avgPercentage = numpy.mean(percentage)
-        self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY)],[numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY)]]
+        self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY+1)],[numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY+1)]]
+        self.maxPercentage = self.classPercentage[0][0]
+        self.avgPercentage = self.classPercentage[1][0]
 
+#         print self.classPercentage
         #print self.prbPool.sizeBank
-        print '\t {0:15} {1:3.5f} {2:3.5f}'.format("Total", round(max(percentage),5), round(numpy.mean(percentage),5))
-        for i in range(self.prbPool.sizeY):            
-            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i], round(self.classPercentage[0][i],5), round(self.classPercentage[1][i],5))
+        print '\t {0:15} {1:3.5f} {2:3.5f}'.format("Total", round(self.classPercentage[0][0],5), round(self.classPercentage[1][0],5))
+        for i in range(1,self.prbPool.sizeY+1):
+            print '\t {0:15} {1:3.5f} {2:3.5f}'.format(self.prbPool.nameY[i-1], round(self.classPercentage[0][i],5), round(self.classPercentage[1][i],5))
         
     def adjProbability(self):
         pass

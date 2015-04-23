@@ -122,7 +122,7 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         elif indexCount == -2:
             return sum(self.countFeedRate)
         elif indexCount < len(self.countFeedRate):
-            return self.countFeedRate[indexCount+1] 
+            return self.countFeedRate[indexCount] 
         else:
             return 0
         
