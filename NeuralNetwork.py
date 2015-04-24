@@ -67,6 +67,11 @@ class NEURAL_NETWORK(object):
 #             sel.append(random.randint(0,1))
             sel.append(self.randParentByCount(parents, i))
             ref = extendedParents[sel[i]].getAllReferenced(i,targetLayer)
+            if len(ref) < 1:
+                print parents
+                print extendedParents
+                print ref
+            
             selectedOnes.append(random.choice(ref))
 
             for j in range(targetLayer-1):
