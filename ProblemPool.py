@@ -188,8 +188,13 @@ class PROBLEM_POOL(object):
             maxBank = max(self.bankX[i])
             minBank = min(self.bankX[i])
             
+            if maxBank-minBank == 0:
+                self.bankX[i] = [0 for _ in range(len(self.bankX[i]))]
+                break
+            
             for j, eachItem in enumerate(self.bankX[i]):
-                self.bankX[i][j] = (eachItem - minBank)/(maxBank/(maxTarget-minTarget))+minTarget
+                
+                self.bankX[i][j] = eachItem/(maxBank-minBank)*(maxTarget-minTarget)+minTarget
                 
         self.rangeX = [[minTarget,maxTarget] for _ in range(self.sizeX)]
     

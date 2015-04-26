@@ -70,7 +70,7 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
                 print "\n\tGeneration " + str(generation) + " is Ended."
                 
                 generation += 1                
-                if generation > 100:
+                if generation > 500:
                     print "\nGeneration is over a hundred. It is too long time... The simulation end."
                     learningState = False
                     
