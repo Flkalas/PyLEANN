@@ -1,3 +1,0 @@
-Connectionist Bench
-Image Segmentation
-Statlog (Image Segmentation)
