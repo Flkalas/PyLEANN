@@ -78,8 +78,10 @@ class GENE_POOL(object):
             temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
             newGenePool.append(copy.deepcopy(temp[0]))        
 #         print len(newGenePool)
-        
+                
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
+        if bankSize < 10:
+            bankSize = 10
         
         for i in range(-2, self.prbPool.sizeY+1):
             listSelected = copy.deepcopy(self.selection(i,bankSize))
@@ -155,7 +157,8 @@ class GENE_POOL(object):
         for _ in range(numToSelection):
             selected.append(random.randint(0,totalCount))
             
-        selected = sorted(selected)
+        selected.sort()        
+#         print numToSelection, totalCount, selected
         
         adjustSel = [selected[0]]
         adjustSel += [selected[i+1] - selected[i] for i in range(len(selected)-1)] 
@@ -295,7 +298,7 @@ class GENE_POOL(object):
                                
     def newGene(self):
         prePopu = len(self.genePool)
-        populationNewGene = int(len(self.genePool)*0.05)        
+        populationNewGene = int((1.0-self.maxPercentage)*len(self.genePool))
         for _ in range(populationNewGene):
             newCell = Cell.CELL()
             newCell.initbyPrbpool(self.prbPool)
@@ -305,19 +308,19 @@ class GENE_POOL(object):
                                            
     def rnaCrossover(self, parents):
         newCell = Cell.CELL()        
-        newCell.initbyRnas(parents, self.prbPool)
+        newCell.initbyRnas(parents)
         
         return newCell
             
     def microevolution(self, parents):
         newCell = Cell.CELL()
-        newCell.initbyMicevol(parents, self.prbPool)
+        newCell.initbyMicevol(parents)
         
         return newCell
     
     def macroevolution(self,parents):
         newCell = Cell.CELL()
-        newCell.initbyMacevol(parents, self.prbPool)
+        newCell.initbyMacevol(parents)
                 
         return newCell        
     

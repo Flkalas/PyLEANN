@@ -32,35 +32,53 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
     def initbyPrbpool(self, prbPool):
         super(CELL, self).initbyPrbpool(prbPool)
         
-        self.initSights(prbPool)        
+        self.initSightsByProblemPool(prbPool)        
         self.initFeeds(prbPool.sizeY)
         
-    def initbyRnas(self, parents, prbPool):
+    def initbyRnas(self, parents):
+        self.checkParentsSize(parents)
+        
         super(CELL, self).initbyRnas(parents)        
         
-        self.initSights(prbPool,self.getSizeLayer())        
-        self.initFeeds(prbPool.sizeY)        
+        self.initSightsByParents(parents)
+        self.initFeeds(len(parents[0].feeds))        
         
-    def initbyMicevol(self, parents, prbPool):
+    def initbyMicevol(self, parents):
+        self.checkParentsSize(parents)
+        
         super(CELL, self).initbyMicevol(parents)
         
-        self.initSights(prbPool,self.getSizeLayer())        
-        self.initFeeds(prbPool.sizeY)
+        self.initSightsByParents(parents)
+        self.initFeeds(len(parents[0].feeds))
     
-    def initbyMacevol(self, parents, prbPool):
+    def initbyMacevol(self, parents):
+        self.checkParentsSize(parents)
+        
         super(CELL, self).initbyMacevol(parents)
                 
-        self.initSights(prbPool,self.getSizeLayer())        
-        self.initFeeds(prbPool.sizeY)
+        self.initSightsByParents(parents)
+        self.initFeeds(len(parents[0].feeds))
         
     def initFeeds(self,sizeY):
         self.feeds = [0 for _ in range(sizeY)]
         self.countFeedRate = [0 for _ in range(sizeY+1)]        
         
-    def initSights(self,prbPool,numLayer=1):
+    def initSightsByProblemPool(self,prbPool,numLayer=1):
         self.sights = [Sight.SIGHT() for _ in range(prbPool.sizeY)]
         for item in self.sights:
-            item.initSight(prbPool,numLayer)
+            item.initSightByProblemPool(prbPool,numLayer)
+
+    def checkParentsSize(self,parents):
+        if len(parents) != 2:
+            print "Number of parents must be 2. but it is ", len(parents)
+            return False
+            
+    def initSightsByParents(self,parents):
+        sizeLayer = self.getSizeLayer()
+                
+        self.sights = [Sight.SIGHT() for _ in range(len(parents[0].sights))]
+        for i in range(len(self.sights)):
+            self.sights[i].initSightByParents(parents,i,sizeLayer)
                     
     def solveProblem(self, prb):
         answer = self.calculate(prb[0])

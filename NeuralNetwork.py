@@ -69,8 +69,14 @@ class NEURAL_NETWORK(object):
             ref = extendedParents[sel[i]].getAllReferenced(i,targetLayer)
             if len(ref) < 1:
                 print parents
+                for each in parents:
+                    print each
+                print "extened"    
                 print extendedParents
+                for each in extendedParents:
+                    print each                
                 print ref
+                print i, sel[i], targetLayer
             
             selectedOnes.append(random.choice(ref))
 
@@ -152,6 +158,10 @@ class NEURAL_NETWORK(object):
         stacks = [[[]for _ in range(len(extendedParents))] for _ in range(sizeOutput)]
         for i in range(eachParent.getSizeOutput()):
             for j in range(len(extendedParents)):
+                if len(stacks) <= i or len(stacks[i]) <= j:
+                    print stacks
+                    print extendedParents
+                    print sizeOutput                     
                 
                 stacks[i][j].extend(extendedParents[j].getAllReferenced(i,maxLayer-1,maxLayer))
                 
@@ -231,7 +241,34 @@ class NEURAL_NETWORK(object):
         self.degenLayer()
         
         
-                
+    def mergeConnectedGraph(self,listSetSimilarity):            
+        numConfirm = 0
+        listToNext = listSetSimilarity
+        
+        while numConfirm != len(listToNext):
+            listToMerge = listToNext
+            listToNext = []
+            numConfirm = 0
+
+            waitSetList = [True for _ in range(len(listToMerge))]
+            
+            for i,setBased in enumerate(listToMerge):
+                for j, setTargeted in enumerate(listToMerge):
+                    if waitSetList[i] and waitSetList[j] and i != j:
+                        if len(setTargeted & setBased) > 0:
+                            listToNext.append(setTargeted|setBased)
+                            waitSetList[i] = False
+                            waitSetList[j] = False
+                            break
+                if waitSetList[i]:
+                    listToNext.append(setBased)
+                    waitSetList[i] = False
+                    numConfirm += 1
+        
+        listSimilar = [list(eachItem) for eachItem in listToNext]
+                    
+        return listSimilar
+    
     def degenSimilarity(self):
         listSetSimilarity = []
         
@@ -243,35 +280,7 @@ class NEURAL_NETWORK(object):
         if len(listSetSimilarity) == 0:
             return False
         
-        def mergeSimilarity(listSetSimilarity):            
-            numConfirm = 0
-            listToNext = listSetSimilarity
-            
-            while numConfirm != len(listToNext):
-                listToMerge = listToNext
-                listToNext = []
-                numConfirm = 0
-
-                waitSetList = [True for _ in range(len(listToMerge))]
-                
-                for i,setBased in enumerate(listToMerge):
-                    for j, setTargeted in enumerate(listToMerge):
-                        if waitSetList[i] and waitSetList[j] and i != j:
-                            if len(setTargeted & setBased) > 0:
-                                listToNext.append(setTargeted|setBased)
-                                waitSetList[i] = False
-                                waitSetList[j] = False
-                                break
-                    if waitSetList[i]:
-                        listToNext.append(setBased)
-                        waitSetList[i] = False
-                        numConfirm += 1
-            
-            listSimilar = [list(eachItem) for eachItem in listToNext]
-                        
-            return listSimilar
-        
-        listSimilarityPC = mergeSimilarity(listSetSimilarity)
+        listSimilarityPC = self.mergeConnectedGraph(listSetSimilarity)
         
         #temp
 #         listsSimilar = [list(eachItem) for eachItem in listSetSimilarity]
@@ -314,7 +323,7 @@ class NEURAL_NETWORK(object):
             
             for compareSet in itertools.combinations(range(len(self.layer[i])),2):
                 if not self.isUnique(compareSet,i):
-                    listUniquness.append(list(compareSet))
+                    listUniquness.append(set(compareSet))
 
             if len(listUniquness) == 0:
                 return False
@@ -323,7 +332,7 @@ class NEURAL_NETWORK(object):
             
 #             print "layer: " + str(i) +", unique: " + str(listUniquness) 
             
-            listNotUniquePC = self.getCliqueSetCombinedList(listUniquness,len(self.layer[i]))
+            listNotUniquePC = self.mergeConnectedGraph(listUniquness)
             
 #             print "layer: " + str(i) +", NotUni: " + str(listNotUniquePC)
             

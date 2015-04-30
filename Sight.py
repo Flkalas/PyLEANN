@@ -12,7 +12,7 @@ class SIGHT(object):
     def __str__(self):                
         return "Center: " + str(self.center) + " Range: " + str(self.sight)
     
-    def initSight(self, prbPool, numLayer):
+    def initSightByProblemPool(self, prbPool, numLayer):
         if numLayer > 3:
             numLayer = 3         
         
@@ -21,7 +21,7 @@ class SIGHT(object):
         rangeDimension = []
         avgList = []
         for i in range(prbPool.sizeX):            
-            rangeDimension.append(((prbPool.rangeX[i][1] - prbPool.rangeX[i][0])/2.0)**2)
+            rangeDimension.append(((prbPool.rangeX[i][1] - prbPool.rangeX[i][0])/2.0)**2.2)
             
         baseSight = sum(rangeDimension)**(1.0/2.0)
         baseSight /= 3.0**2
@@ -33,6 +33,15 @@ class SIGHT(object):
 #         baseSight = float(sum(avgList)/len(avgList)/3*numLayer)
 #         self.sight = abs(random.normalvariate(baseSight,1))
         
+        return 0
+    
+    def initSightByParents(self,parents,index,sizeLayer):
+        sightParentSelected = random.choice(parents).sights[index]
+        
+        self.center = [random.normalvariate(eachAxis,1.0/((sizeLayer+0.1)**1.5)) for eachAxis in sightParentSelected.center]
+#         self.center = [random.random()*2.0-1.0 for _ in range(len(sightParentSelected.center))]
+        self.sight = random.normalvariate(sightParentSelected.sight,0.1)
+
         return 0
         
     def isInSight(self,dataX):        
@@ -53,11 +62,27 @@ class SIGHT(object):
          
         return math.sqrt(total)
         
+    def getCenterOfTwoPoints(self,points):
+        if len(points) != 2:
+            return -66
         
+        numAxis = len(points[0])
+        pointsRotated = [[] for _ in range(numAxis)]
+        for eachPoint in points:
+            for i, eachAxis in enumerate(eachPoint):
+                pointsRotated[i].append(eachAxis)
+        
+        newPoint = []
+        for eachAxis in pointsRotated:            
+            newPoint.append(sum(eachAxis)/2.0)
+            
+        return newPoint
+            
+            
         
 # prbPool = ProblemPool.PROBLEM_POOL("./balance.csv")
 # sight = SIGHT()
-# sight.initSight(prbPool,1)
+# sight.initSightByProblemPool(prbPool,1)
 # print sight.center
 # print sight.sight
 # onepoint = prbPool.getRandomProblemFromBank()

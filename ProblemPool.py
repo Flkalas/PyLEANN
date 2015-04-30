@@ -91,6 +91,8 @@ class PROBLEM_POOL(object):
         if onCrossValid:
             self.fixCrossValidation(numBlock)
         
+#         self.printAllBank()
+        
         return 0
         
     def convertNumToClass(self,numClass,sizeClasses):
@@ -178,8 +180,6 @@ class PROBLEM_POOL(object):
             print self.getOneProblemFromBank(i)
             
     def normalizer(self):
-        
-        
         minTarget = -1.0
         maxTarget = 1.0
         
@@ -187,6 +187,7 @@ class PROBLEM_POOL(object):
             #get max min
             maxBank = max(self.bankX[i])
             minBank = min(self.bankX[i])
+#             print maxBank, minBank
             
             if maxBank-minBank == 0:
                 self.bankX[i] = [0 for _ in range(len(self.bankX[i]))]
@@ -194,12 +195,24 @@ class PROBLEM_POOL(object):
             
             for j, eachItem in enumerate(self.bankX[i]):
                 
-                self.bankX[i][j] = eachItem/(maxBank-minBank)*(maxTarget-minTarget)+minTarget
+                self.bankX[i][j] = self.translate(eachItem,minBank,maxBank,minTarget,maxTarget)
                 
         self.rangeX = [[minTarget,maxTarget] for _ in range(self.sizeX)]
     
+    
+    def translate(self, value, leftMin, leftMax, rightMin, rightMax):
+        # Figure out how 'wide' each range is
+        leftSpan = leftMax - leftMin
+        rightSpan = rightMax - rightMin
+    
+        # Convert the left range into a 0-1 range (float)
+        valueScaled = float(value - leftMin) / float(leftSpan)
+    
+        # Convert the 0-1 range into a value in the right range.
+        return rightMin + (valueScaled * rightSpan) 
+    
 # prbPool = PROBLEM_POOL()
-# prbPool.initFromFile("./iris.csv")
+# prbPool.initFromFile("./iris.csv",onCrossValid=True)
 # prbPool.printAllBank()
 # dump = raw_input("View")
 # prbPool.normalizer()

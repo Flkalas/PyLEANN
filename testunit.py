@@ -1,4 +1,4 @@
-def mergeSimilarity(listSetSimilarity):            
+def mergeConnectedGraph(listSetSimilarity):            
     numConfirm = 0
     listToNext = listSetSimilarity
     
@@ -25,4 +25,4 @@ def mergeSimilarity(listSetSimilarity):
     return listToNext
 
 a = [{0,4},{0,5},{1,2},{5,6}]
-print mergeSimilarity(a)
+print mergeConnectedGraph(a)
