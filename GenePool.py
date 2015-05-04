@@ -96,8 +96,11 @@ class GENE_POOL(object):
         self.genePool = newGenePool
         
 #         print bankSize, len(self.genePool)
-        
+        enablePrintBest
         return len(self.genePool)
+    
+    def actDigestion(self):
+        pass
 
     def resetCounter(self):
         for cell in self.genePool:
