@@ -1,3 +1,4 @@
+import math
 import copy
 import random
 
@@ -95,12 +96,45 @@ class GENE_POOL(object):
         self.calSolvingPercentage()
         self.genePool = newGenePool
         
+        self.actDigestion()
+        
 #         print bankSize, len(self.genePool)
-        enablePrintBest
+        
         return len(self.genePool)
     
     def actDigestion(self):
-        pass
+        popuToHunting = int(math.ceil(len(self.genePool)*0.001/(self.prbPool.sizeY)))
+        
+        if popuToHunting < 1:
+            return False
+                
+        for eachIndex in range(self.prbPool.sizeY):
+            listHunt = self.selection(eachIndex,int(popuToHunting*(1.0-self.classPercentage[0][eachIndex+1])*10.0))
+                
+            for eachCell in listHunt:
+                preyList = self.findAllPreyInRange(eachCell,eachIndex)
+                
+#                 if len(preyList) > 0:
+#                     print "Digest Activate------------------------------------------", eachIndex
+                
+                for eachPrey in preyList:
+                    sizeLayerPrey = eachPrey.getSizeLayer()
+                    sizeLayerHunter = eachCell.getSizeLayer()
+                    if sizeLayerHunter > sizeLayerPrey:
+                        if random.random() < 1.0/(abs(sizeLayerHunter-sizeLayerPrey)**2.2):
+#                             print "Eat one"
+                            self.genePool.append(self.microevolution([eachCell,eachPrey]))
+                    
+        return True
+                
+    def findAllPreyInRange(self,cellHunting,indexOutput):
+        listInRange = []
+        
+        for eachCell in self.genePool:
+            if cellHunting.sights[indexOutput].isInSight(eachCell.sights[indexOutput].center):
+                listInRange.append(eachCell)
+                
+        return listInRange        
 
     def resetCounter(self):
         for cell in self.genePool:
@@ -150,6 +184,9 @@ class GENE_POOL(object):
         return True
         
     def selection(self, indexOutput=-1, numToSelection=2):
+        if numToSelection == 0:
+            return []
+        
         self.genePool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=True)
                 
         totalCount = len(self.genePool)

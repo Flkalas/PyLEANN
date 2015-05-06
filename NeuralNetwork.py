@@ -143,7 +143,7 @@ class NEURAL_NETWORK(object):
     def initbyMicevol(self, parents):
         numLayer = []
         for eachParent in parents:
-            numLayer.append(eachParent.getSizeLayer())            
+            numLayer.append(eachParent.getSizeLayer())
         maxLayer = max(numLayer)
         self.layer = [[] for _ in range(maxLayer-1)]
         
@@ -156,12 +156,12 @@ class NEURAL_NETWORK(object):
 #         print extendedParents
             
         stacks = [[[]for _ in range(len(extendedParents))] for _ in range(sizeOutput)]
-        for i in range(eachParent.getSizeOutput()):
+        for i in range(sizeOutput):
             for j in range(len(extendedParents)):
-                if len(stacks) <= i or len(stacks[i]) <= j:
-                    print stacks
+                if len(stacks) <= i or len(stacks[i]) <= j:                    
                     print extendedParents
-                    print sizeOutput                     
+                    print stacks                    
+                    print sizeOutput, i, j
                 
                 stacks[i][j].extend(extendedParents[j].getAllReferenced(i,maxLayer-1,maxLayer))
                 
@@ -199,6 +199,9 @@ class NEURAL_NETWORK(object):
         self.degeneration()
         
         return self.checkIntegrity("MACRO")
+    
+    def initbyDigest(self,cellHunter,cellPrey):
+        pass
 
     def calculate(self, dataX):        
         outputData = dataX
@@ -727,10 +730,11 @@ class NEURAL_NETWORK(object):
     
     def getAllReferenced(self,indexInLayer,numTargetLayer=1,numLayer=-1):
         if self.checkIndexInLayer(indexInLayer,numLayer):
+            print "Out of Index- Index in layer: ", indexInLayer, "Index of End Layer: ", numLayer
             return []
         
         if self.checkLayer(numTargetLayer):
-
+            print "Out of Layer- Index of Start layer: ", numTargetLayer
             return []
         
         if numLayer == -1:
@@ -743,7 +747,7 @@ class NEURAL_NETWORK(object):
                 for k in range(self.layer[i][j].numInput()):
                     outputs.append(self.layer[i][j].indexes[k])
             inputs = list(set(outputs))
-            outputs = []            
+            outputs = []
         
         return inputs
     

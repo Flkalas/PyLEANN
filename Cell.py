@@ -59,6 +59,12 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         self.initSightsByParents(parents)
         self.initFeeds(len(parents[0].feeds))
         
+    def initbyDigest(self,cellHunter,cellPrey):                
+        super(CELL, self).initbyDigest(cellHunter,cellPrey)
+        
+        self.initSightsByParents([cellHunter,cellPrey])
+        self.initFeeds(len(cellHunter.feeds))
+        
     def initFeeds(self,sizeY):
         self.feeds = [0 for _ in range(sizeY)]
         self.countFeedRate = [0 for _ in range(sizeY+1)]        
