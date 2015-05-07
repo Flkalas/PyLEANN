@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ac9b47d1-ffd7-4136-984d-bce42c0e81af}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>Main.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="asd.txt" />
+    <Content Include="asz.txt" />
+    <Content Include="dataset\Index.txt" />
+    <Content Include="dataset\Index2.txt" />
+    <Content Include="dataset\Index22.txt" />
+    <Content Include="dataset\Indexaaa.txt" />
+    <Content Include="dataset\Indexadf.txt" />
+    <Content Include="dataset\Indexvvv.txt" />
+    <Content Include="dataset\Indexzxc.txt" />
+    <Content Include="error.txt" />
+    <Content Include="images\bg_hr.png" />
+    <Content Include="images\blacktocat.png" />
+    <Content Include="images\icon_download.png" />
+    <Content Include="images\sprite_download.png" />
+    <Content Include="index.html" />
+    <Content Include="javascripts\main.js" />
+    <Content Include="log.txt" />
+    <Content Include="parser\test.txt" />
+    <Content Include="sfdsd.txt" />
+    <Content Include="stylesheets\pygment_trac.css" />
+    <Content Include="stylesheets\stylesheet.css" />
+    <Content Include="zxc.txt" />
+    <Content Include="zxcvzxcv.txt" />
+    <Content Include="새 텍스트 문서 %282%29.txt" />
+    <Content Include="새 텍스트 문서 %283%29.txt" />
+    <Content Include="새 텍스트 문서 %284%29.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cell.py" />
+    <Compile Include="const.py" />
+    <Compile Include="GenePool.py" />
+    <Compile Include="Logger.py" />
+    <Compile Include="Main.py" />
+    <Compile Include="NeuralNetwork.py" />
+    <Compile Include="parser\ReferenceParser.py" />
+    <Compile Include="Perceptron.py" />
+    <Compile Include="ProblemPool.py" />
+    <Compile Include="Rna.py" />
+    <Compile Include="Score.py" />
+    <Compile Include="Sight.py" />
+    <Compile Include="testunit.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dataset" />
+    <Folder Include="images" />
+    <Folder Include="javascripts" />
+    <Folder Include="parser" />
+    <Folder Include="stylesheets" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
