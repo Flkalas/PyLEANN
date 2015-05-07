@@ -22,10 +22,10 @@ import ProblemPool
 #         self.weights = (ctypes.c_double * len(weights))(*weights)
  
 # double calculate(double* dataX, int numInput, double* weights, int* indexes, bool region);
-cPerceptronDLL = ctypes.cdll.LoadLibrary("./cPerceptron.dll")
-cPcCalculate = cPerceptronDLL.calculate
+#cPerceptronDLL = ctypes.cdll.LoadLibrary("./cPerceptron.dll")
+#cPcCalculate = cPerceptronDLL.calculate
 # cPcCalculate.argtypes = [ctypes.POINTER(cPerceptron)]
-cPcCalculate.restype = ctypes.c_double
+#cPcCalculate.restype = ctypes.c_double
 
 MIN_NUM_INPUT = const.MIN_NUM_INPUT = 2
 

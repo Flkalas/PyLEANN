@@ -3,7 +3,12 @@ class LOGGER(object):
         pass
     
     def initLogger(self,nameTestFile,pathBasic="../results/",activate=True):
+        import os
         self.pathBasic = pathBasic
+
+        if not os.path.exists(self.pathBasic):
+            os.makedirs(self.pathBasic)
+
         self.findPrefixNumber(nameTestFile)
         self.activated = activate
 

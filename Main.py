@@ -49,7 +49,7 @@ def learningLeann(nameFile):
 
 def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
     antLogger = Logger.LOGGER()
-    antLogger.initLogger(nameFile,"D:\\results/",activate=True)
+    antLogger.initLogger(nameFile,"../results/",activate=True)
     
     for i in range(numBlock):
         prbPool = ProblemPool.PROBLEM_POOL()
