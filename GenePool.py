@@ -96,7 +96,7 @@ class GENE_POOL(object):
         self.calSolvingPercentage()
         self.genePool = newGenePool
         
-        self.actDigestion()
+        #self.actDigestion()
         
 #         print bankSize, len(self.genePool)
         
