@@ -730,7 +730,7 @@ class NEURAL_NETWORK(object):
     
     def getAllReferenced(self,indexInLayer,numTargetLayer=1,numLayer=-1):
         if self.checkIndexInLayer(indexInLayer,numLayer):
-            print "Out of Index- Index in layer: ", indexInLayer, "Index of End Layer: ", numLayer
+            print "Out of Index- Index in layer: ", indexInLayer, "Index of End Layer: ", numLayer, len(self.layer[len(self.layer)-1])
             return []
         
         if self.checkLayer(numTargetLayer):
@@ -814,7 +814,7 @@ class NEURAL_NETWORK(object):
     def checkIndexInLayer(self,IndexInLayer,numLayer=-1):        
         if numLayer == -1:
             numLayer = len(self.layer)
-                    
+
         if not self.checkLayer(numLayer):
             return (IndexInLayer < 0) or (IndexInLayer > len(self.layer[numLayer-1])-1)
         else:
