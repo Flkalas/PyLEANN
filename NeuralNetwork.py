@@ -37,7 +37,7 @@ class NEURAL_NETWORK(object):
             initLayer.append(newPC)
         self.layer.append(initLayer)
         
-        return self.checkIntegrity("BASIC")
+        return self.checkIntegrity(prbPool.sizeY,"BASIC")
         
     def initbyRnas(self, parents):
         
@@ -49,6 +49,7 @@ class NEURAL_NETWORK(object):
                 
         targetLayer = random.choice(sizeLayer)
         numOutput = parents[0].getSizeOutput()
+		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
 
         extendedParents = []
         for i, eachLayernum in enumerate(sizeLayer):
@@ -101,9 +102,15 @@ class NEURAL_NETWORK(object):
             
         self.degeneration()
             
-        return self.checkIntegrity("RNA")
+        return self.checkIntegrity(numRealOutput,"RNA")
             
-    def checkIntegrity(self,fromWhere="DEFAULT"):        
+    def checkIntegrity(self,numBaseOutput,fromWhere="DEFAULT"):
+		
+		if self.getSizeOutput() != numBaseOutput
+			print "Self: ", self.getSizeOutput(), ", Parents: ", numBaseOutput
+			while True:
+				pass
+
         for i, eachLayer in enumerate(self.layer):
             if i > 0:
                 for eachPerceptron in eachLayer:
@@ -148,6 +155,7 @@ class NEURAL_NETWORK(object):
         self.layer = [[] for _ in range(maxLayer-1)]
         
         sizeOutput = parents[0].getSizeOutput()
+		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
         extendedParents = []
         for eachParent in parents:
@@ -178,11 +186,12 @@ class NEURAL_NETWORK(object):
         
         self.degeneration()
         
-        return self.checkIntegrity("MICRO")
+        return self.checkIntegrity(numRealOutput,"MICRO")
         
     def initbyMacevol(self, parents):
         numBasicLayer = parents[0].getSizeLayer()
         numOutput = parents[0].getSizeOutput()
+		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
         self.layer = [[] for _ in range(numBasicLayer)]
         
@@ -198,7 +207,7 @@ class NEURAL_NETWORK(object):
         
         self.degeneration()
         
-        return self.checkIntegrity("MACRO")
+        return self.checkIntegrity(numRealOutput,"MACRO")
     
     def initbyDigest(self,cellHunter,cellPrey):
         pass
@@ -226,7 +235,8 @@ class NEURAL_NETWORK(object):
                 outputData.append(self.layer[i][j].calculate(inputData))
         return outputData
     
-    def mutate(self,sizeX):        
+    def mutate(self,sizeX):
+		numPrevOutput = self.getSizeOutput()
         indexMutatePerceptron = random.randint(0,len(self.layer[0])-1)        
 #         if len(self.layer[numMutateLayer][indexMutatePerceptron].indexes)-1 <= 0 or len(self.layer[numMutateLayer][indexMutatePerceptron].weights) <= 1:
 #             print self

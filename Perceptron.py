@@ -224,7 +224,7 @@ class PERCEPTRON(object):
     def calANDgateValue(self):
         numInput = float(self.numInput())
         
-        if numInput < 2:
+        if numInput < 2.0:
             return 1.0
         
         return 2.0 / (2.0*(numInput-1)) / (numInput+1)
