@@ -385,32 +385,43 @@ class NEURAL_NETWORK(object):
                     setIndex.add(eachPerceptron.indexes[0])
                     
             if (list(setIndex) == range(len(self.layer[i]))) and (len(self.layer[i]) == len(self.layer[i-1])):
+                newLayer = []
+                for eachPerceptron in self.layer[i]:                    
+                    newLayer.append(self.layer[i-1][eachPerceptron.indexes[0]])                
                 
-#                 print "Layer------------------------------------------"
+#                 print "Degen Layer------------------------------------------"
 #                 self.printLayer()
-#                 
+#                 print "i: ", i, "index set: ", list(setIndex), "range: ", range(len(self.layer[i]))
+#                 print "i length: ", len(self.layer[i]), "i-1 length: ", len(self.layer[i-1])
+#   
 #                 print "\n"
 #                 for eachPerceptron in self.layer[i]:
 #                     print eachPerceptron
 #                 print "\n"
 #                 for eachPerceptron in self.layer[i-1]:
 #                     print eachPerceptron
-                    
-                newLayer = []
-                for eachPerceptron in self.layer[i]:                    
-                    newLayer.append(self.layer[i-1][eachPerceptron.indexes[0]])
-                
-                self.layer = self.layer[0:i]
-                self.layer[i-1] = newLayer
-        
+#                 
 #                 print "\n"
 #                 for eachPerceptron in newLayer:
 #                     print eachPerceptron
-#                 print "\n"
-#                     
-#                 self.printLayer()
+#                 print "\n"                     
+                
+                self.layer = [self.layer[index] if i-1 != index else newLayer for index in range(self.getSizeLayer())]
+                del self.layer[i]
+                
+#                 self.layer = self.layer[0:i]
+#                 self.layer[i-1] = newLayer
 
-            self.checkIntegrity(numPrevOutput,"Layer Degeneration")
+#                 self.printLayer()
+#                 print "-----------------------------------------------------"
+                
+
+                if self.getSizeOutput() != numPrevOutput:
+                    self.printLayer()
+                    print "i: ", i, "index set: ", list(setIndex), "range: ", range(len(self.layer[i]))
+                    print "i length: ", len(self.layer[i]), "i-1 length: ", len(self.layer[i-1])                    
+
+                self.checkIntegrity(numPrevOutput,"Layer Degeneration")
 
         return prevSizeLayer != self.getSizeLayer()
         
