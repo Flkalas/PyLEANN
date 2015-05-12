@@ -4,10 +4,7 @@ import random
 import operator
 import itertools
 
-import Rna
-import Sight
 import Perceptron
-import ProblemPool
 
 class NEURAL_NETWORK(object):
     def __init__(self):
@@ -49,7 +46,7 @@ class NEURAL_NETWORK(object):
                 
         targetLayer = random.choice(sizeLayer)
         numOutput = parents[0].getSizeOutput()
-		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
+        numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
 
         extendedParents = []
         for i, eachLayernum in enumerate(sizeLayer):
@@ -104,12 +101,11 @@ class NEURAL_NETWORK(object):
             
         return self.checkIntegrity(numRealOutput,"RNA")
             
-    def checkIntegrity(self,numBaseOutput,fromWhere="DEFAULT"):
-		
-		if self.getSizeOutput() != numBaseOutput
-			print "Self: ", self.getSizeOutput(), ", Parents: ", numBaseOutput
-			while True:
-				pass
+    def checkIntegrity(self,numBaseOutput,fromWhere="DEFAULT"):        
+        if self.getSizeOutput() != numBaseOutput:
+            print "Self: ", self.getSizeOutput(), ", Parents: ", numBaseOutput, fromWhere
+            while True:
+                pass
 
         for i, eachLayer in enumerate(self.layer):
             if i > 0:
@@ -155,7 +151,7 @@ class NEURAL_NETWORK(object):
         self.layer = [[] for _ in range(maxLayer-1)]
         
         sizeOutput = parents[0].getSizeOutput()
-		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
+        numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
         extendedParents = []
         for eachParent in parents:
@@ -191,7 +187,7 @@ class NEURAL_NETWORK(object):
     def initbyMacevol(self, parents):
         numBasicLayer = parents[0].getSizeLayer()
         numOutput = parents[0].getSizeOutput()
-		numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
+        numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
         self.layer = [[] for _ in range(numBasicLayer)]
         
@@ -236,13 +232,13 @@ class NEURAL_NETWORK(object):
         return outputData
     
     def mutate(self,sizeX):
-		numPrevOutput = self.getSizeOutput()
+        numPrevOutput = self.getSizeOutput()
         indexMutatePerceptron = random.randint(0,len(self.layer[0])-1)        
 #         if len(self.layer[numMutateLayer][indexMutatePerceptron].indexes)-1 <= 0 or len(self.layer[numMutateLayer][indexMutatePerceptron].weights) <= 1:
 #             print self
         self.layer[0][indexMutatePerceptron].mutate(sizeX)
         
-        return self.checkIntegrity("MUTATE")
+        return self.checkIntegrity(numPrevOutput,"MUTATE")
     
     def degeneration(self):
         if self.getSizeLayer() < 2:
@@ -282,7 +278,7 @@ class NEURAL_NETWORK(object):
                     
         return listSimilar
     
-    def degenSimilarity(self):
+    def degenSimilarity(self):        
         listSetSimilarity = []
         
         for compareSet in itertools.combinations(range(len(self.layer[0])),2):
@@ -293,6 +289,7 @@ class NEURAL_NETWORK(object):
         if len(listSetSimilarity) == 0:
             return False
         
+        numPrevOutput = self.getSizeOutput()
         listSimilarityPC = self.mergeConnectedGraph(listSetSimilarity)
         
         #temp
@@ -323,15 +320,16 @@ class NEURAL_NETWORK(object):
         self.adjustIndexByDelete(1, deletedPClist)
         self.deletePerceptrons(0, deletedPClist)
 
-        self.checkIntegrity("Degen Similarity")
+        self.checkIntegrity(numPrevOutput,"Degen Similarity")
 
         return len(listSetSimilarity) > 0
     
-    def degenUniquness(self):        
+    def degenUniquness(self):
         if self.getSizeLayer() < 3:
             return False
         
         for i in range(1,len(self.layer)-1):
+            
             listUniquness = []
             
             for compareSet in itertools.combinations(range(len(self.layer[i])),2):
@@ -345,6 +343,7 @@ class NEURAL_NETWORK(object):
             
 #             print "layer: " + str(i) +", unique: " + str(listUniquness) 
             
+            numPrevOutput = self.getSizeOutput()
             listNotUniquePC = self.mergeConnectedGraph(listUniquness)
             
 #             print "layer: " + str(i) +", NotUni: " + str(listNotUniquePC)
@@ -366,7 +365,7 @@ class NEURAL_NETWORK(object):
             self.deletePerceptrons(i, listDeletedPC)
         
 #             self.printLayer()
-            self.checkIntegrity("MICRO UNIQUE")
+            self.checkIntegrity(numPrevOutput,"MICRO UNIQUE")
         
         return len(listDeletedPC) > 0
     
@@ -377,6 +376,7 @@ class NEURAL_NETWORK(object):
         prevSizeLayer = self.getSizeLayer()
         
         for i in reversed(range(1,self.getSizeLayer())):
+            numPrevOutput = self.getSizeOutput()
             setIndex = set()
             for eachPerceptron in self.layer[i]:
                 if len(eachPerceptron.indexes) != 1:
@@ -409,6 +409,8 @@ class NEURAL_NETWORK(object):
 #                 print "\n"
 #                     
 #                 self.printLayer()
+
+            self.checkIntegrity(numPrevOutput,"Layer Degeneration")
 
         return prevSizeLayer != self.getSizeLayer()
         
