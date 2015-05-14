@@ -55,7 +55,7 @@ class GENE_POOL(object):
 
         return 0
     
-    def evaluation(self,enablePrintBest=False):        
+    def evaluation(self,enablePrintBest=False):
         newGenePool = []
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
@@ -91,8 +91,8 @@ class GENE_POOL(object):
             
         if enablePrintBest:
             self.genePool.sort(key=lambda cell: cell.getCount(0), reverse=True)
-            print newGenePool[0]
-                    
+            print self.genePool[0]
+
         self.calSolvingPercentage()
         self.genePool = newGenePool
         

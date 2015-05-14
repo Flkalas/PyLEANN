@@ -111,10 +111,15 @@ class PERCEPTRON(object):
                     pass
             total += self.weights[i]*dataX[self.indexes[i]]
   
-        if (total < self.threshold) == self.region:
-            return 0
-        else:
-            return 1
+        #step function
+#         if (total < self.threshold) == self.region:
+#             return 0
+#         else:
+#             return 1
+        
+        #Rectifier
+        expectedOutput = total - self.threshold + 1.0
+        return max(0,expectedOutput)
         
         
     def arrangeIndexes(self,numLayer,stack):

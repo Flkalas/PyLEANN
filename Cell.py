@@ -91,15 +91,30 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         boolRight = True
         for i in range(len(prb[1])):            
             if self.sights[i].isInSight(prb[0]):
-                if answer[i] == prb[1][i]:
-                    self.countFeedRate[i+1] += 1
-                else:
-                    boolRight = False
+                #for rectifier
+                self.countFeedRate[i+1] += abs(answer[i] - float(prb[1][i]))
+                                
+                #for step function
+#                 if answer[i] == prb[1][i]:
+#                     self.countFeedRate[i+1] += 1
+#                 else:
+#                     boolRight = False
             else:
                 boolRight = False
                 
+                
         if boolRight:
-            self.countFeedRate[0] += 1
+            #for step functoin
+#             self.countFeedRate[0] += 1
+            
+            #for rectifier
+            maxIndex = 0
+            for i, eachOutput in enumerate(answer):
+                if eachOutput > answer[maxIndex]:
+                    maxIndex = i
+            
+            if prb[1][maxIndex] == 1:
+                self.countFeedRate[0] += 1            
     
     def gainFeed(self,indexFeed,valFeed):
         self.feeds[indexFeed] += valFeed
