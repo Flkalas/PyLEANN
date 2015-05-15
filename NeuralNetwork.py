@@ -824,7 +824,7 @@ class NEURAL_NETWORK(object):
         for eachParent in parents:
             counts.append(eachParent.getCount(indexCount))
         
-        sel = random.randint(0,sum(counts)+1)
+        sel = random.uniform(0,sum(counts)+1)
         
 #         if parents[0].getSizeLayer() > 1:
 #             print sel, counts

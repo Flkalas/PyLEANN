@@ -28,6 +28,10 @@ class GENE_POOL(object):
         self.previousMaxPercentage = -1.0
         self.numGenStaturated = 0
         
+        self.strTransfer = "Rectifier"
+        self.dictTransfer = {"Rectifier": False,
+                             "Step": True}
+        
     def doGame(self,blockBank = -1, numBlock = 10):
         if blockBank == -1:
             self.excuteBlock(blockBank)
@@ -36,7 +40,7 @@ class GENE_POOL(object):
                 if i != blockBank:
                     self.excuteBlock(i, numBlock)
     
-    def excuteBlock(self,blockBank = -1, numBlock = 10):
+    def excuteBlock(self,blockBank = -1, numBlock = 10, withoutSight=False):
         if blockBank == -1:
             blockStart = 0
             blockEnd = self.prbPool.sizeBank
@@ -45,13 +49,13 @@ class GENE_POOL(object):
             blockEnd = self.prbPool.sizeBank/numBlock*(blockBank+1)
 
         for j in range(blockStart, blockEnd):
-            self.numSolvePrb += 1 
+            self.numSolvePrb += 1.0
             prb = self.prbPool.getOneProblemFromBank(j)
 #             if j == blockStart:
 #                 print prb, blockStart
 #                 print self.prbPool.sizeBank, numBlock, blockBank
             for cell in self.genePool:
-                cell.solveProblem(prb)                
+                cell.solveProblem(prb,withoutSight)
 
         return 0
     
@@ -60,7 +64,7 @@ class GENE_POOL(object):
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
         
         for i in range(-2, self.prbPool.sizeY+1):
-            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
+            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=self.dictTransfer[self.strTransfer])
             newGenePool += copy.deepcopy(temp[0:bankSize])
             #print i, temp[0]
         #print "-1" + str(temp[0])
@@ -76,7 +80,7 @@ class GENE_POOL(object):
     def evaluationLR(self,enablePrintBest=False):
         newGenePool = []
         for i in range(-2, self.prbPool.sizeY+1):
-            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=True)
+            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=self.dictTransfer[self.strTransfer])
             newGenePool.append(copy.deepcopy(temp[0]))        
 #         print len(newGenePool)
                 
@@ -90,7 +94,7 @@ class GENE_POOL(object):
             newGenePool += listSelected
             
         if enablePrintBest:
-            self.genePool.sort(key=lambda cell: cell.getCount(0), reverse=True)
+            self.genePool.sort(key=lambda cell: cell.getCount(0), reverse=self.dictTransfer[self.strTransfer])
             print self.genePool[0]
 
         self.calSolvingPercentage()
@@ -187,17 +191,26 @@ class GENE_POOL(object):
         if numToSelection == 0:
             return []
         
-        self.genePool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=True)
+        self.genePool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=self.dictTransfer[self.strTransfer])
                 
-        totalCount = len(self.genePool)
+        totalCount = 0.0
+        maxCount = 0.0         
         for cell in self.genePool:
-            totalCount += cell.getCount(indexOutput)
-                        
+            cellCount = cell.getCount(indexOutput)
+            totalCount += cellCount
+            if cellCount > maxCount:
+                maxCount = cellCount
+                
+        if not self.dictTransfer[self.strTransfer]:
+            totalCount = maxCount*len(self.genePool) - totalCount
+            
+        totalCount += len(self.genePool)
+            
         selected = []
         for _ in range(numToSelection):
-            selected.append(random.randint(0,totalCount))
+            selected.append(random.uniform(0,totalCount))
             
-        selected.sort()        
+        selected.sort()
 #         print numToSelection, totalCount, selected
         
         adjustSel = [selected[0]]
@@ -222,7 +235,11 @@ class GENE_POOL(object):
                 continue
             else:                
                 for indexNow, eachCell in enumerate(self.genePool[indexGenePool:]):
-                    eachSel -= eachCell.getCount(indexOutput)+1
+                    eachCount = eachCell.getCount(indexOutput)
+                    if not self.dictTransfer[self.strTransfer]:
+                        eachCount = maxCount - eachCount
+                    
+                    eachSel -= eachCount + 1.0
 #                     print "\tproc : ", eachSel
                     if eachSel < 1:
                         selectedCell.append(copy.deepcopy(eachCell))
@@ -365,11 +382,22 @@ class GENE_POOL(object):
         return newCell        
     
     def calSolvingPercentage(self):
+        #if evaluation value is larger is better
         classPercentage = [[] for _ in range(self.prbPool.sizeY+1)]
-        for i in range(self.prbPool.sizeY+1):
-            for cell in self.genePool:
-                classPercentage[i].append(float(cell.getCount(i)/float(self.numSolvePrb)))
+        
+#         print self.numSolvePrb, self.genePool[0].getCount(1)
                 
+        if self.dictTransfer[self.strTransfer]:
+            for i in range(self.prbPool.sizeY+1):
+                for cell in self.genePool:
+                    classPercentage[i].append(float(cell.getCount(i)/float(self.numSolvePrb)))                    
+                        
+        #value is close to 0 is better
+        else:
+            for i in range(self.prbPool.sizeY+1):
+                for cell in self.genePool:
+                    classPercentage[i].append((float(self.numSolvePrb) - float(cell.getCount(i)))/float(self.numSolvePrb))
+                    
         self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY+1)],[numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY+1)]]
         self.maxPercentage = self.classPercentage[0][0]
         self.avgPercentage = self.classPercentage[1][0]
@@ -432,8 +460,10 @@ class GENE_POOL(object):
                 print i, j, sum(elements), elements
                 
     def remainBestOne(self):
-        temp = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
-        self.genePool = [temp[0]] 
+        
+        
+        temp = sorted(self.genePool, key=lambda cell: cell.getCount(0), reverse=self.dictTransfer[self.strTransfer])
+        self.genePool = [temp[0]]
         return copy.deepcopy(temp[0])
             
     def getStrGenerationPercent(self):    

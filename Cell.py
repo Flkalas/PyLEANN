@@ -86,13 +86,15 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         for i in range(len(self.sights)):
             self.sights[i].initSightByParents(parents,i,sizeLayer)
                     
-    def solveProblem(self, prb):
+    def solveProblem(self, prb, solveWithoutSight=False):
         answer = self.calculate(prb[0])
+#         print answer
         boolRight = True
         for i in range(len(prb[1])):            
-            if self.sights[i].isInSight(prb[0]):
+            if self.sights[i].isInSight(prb[0]) or solveWithoutSight:
+                
                 #for rectifier
-                self.countFeedRate[i+1] += abs(answer[i] - float(prb[1][i]))
+                self.countFeedRate[i+1] += abs(answer[i] - float(prb[1][i]))                
                                 
                 #for step function
 #                 if answer[i] == prb[1][i]:
@@ -102,6 +104,8 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
             else:
                 boolRight = False
                 
+                #for rectifier
+                self.countFeedRate[i+1] += 1.0
                 
         if boolRight:
             #for step functoin
@@ -110,11 +114,14 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
             #for rectifier
             maxIndex = 0
             for i, eachOutput in enumerate(answer):
-                if eachOutput > answer[maxIndex]:
+                if abs(eachOutput-1.0) < abs(answer[maxIndex]-1.0):
                     maxIndex = i
             
-            if prb[1][maxIndex] == 1:
-                self.countFeedRate[0] += 1            
+            if prb[1][maxIndex] != 1:
+                self.countFeedRate[0] += 1.0    
+                
+        else:
+            self.countFeedRate[0] += 1.0#for Rectifier
     
     def gainFeed(self,indexFeed,valFeed):
         self.feeds[indexFeed] += valFeed

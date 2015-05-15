@@ -5,16 +5,21 @@ import Logger
 import GenePool
 import ProblemPool
 
+limitGeneration = 500
+
 def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  blockBank = -1, numBlock = 10):
     geenpool.doGame(blockBank,numBlock)
 
     #gp.statLayerCount()
-    geenpool.evaluationLR(False)
+    geenpool.evaluationLR(True)
 #     numSimulation,numGeneration,nameCategory,strContent,numBlock=-1
     logger.writeGenerationResult(numSimulation,numGeneration,"Percent",geenpool.getStrGenerationPercent(),blockBank)
     logger.writeGenerationResult(numSimulation,numGeneration,"Diversity",geenpool.getStrDiversity(),blockBank)
     learningState = geenpool.checkLearningState(True)
     
+    if limitGeneration == numGeneration:
+        return False
+        
     geenpool.crossover()
     geenpool.mutation()
     geenpool.evolution()
@@ -24,7 +29,7 @@ def operateGenepool(geenpool, logger="", numSimulation=0, numGeneration=0,  bloc
     return learningState
 
 def learningLeann(nameFile):
-    prbPool = ProblemPool.PROBLEM_POOL(nameFile)  
+    prbPool = ProblemPool.PROBLEM_POOL(nameFile)
     gp = GenePool.GENE_POOL()
     gp.initGenePool(prbPool, 100)
     generation = 0
@@ -46,6 +51,7 @@ def learningLeann(nameFile):
             if generation > 100:
                 print "\nGeneration is over a hundred. It is too long time... The simulation end."
                 learningState = False
+
 
 def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
     antLogger = Logger.LOGGER()
@@ -70,17 +76,25 @@ def learningLeannCrossValidation(nameFile, numSimulation=0, numBlock=10):
                 print "\n\tGeneration " + str(generation) + " is Ended."
                 
                 generation += 1                
-                if generation > 500:
+                if generation > limitGeneration:
                     print "\nGeneration is over a hundred. It is too long time... The simulation end."
                     learningState = False
                     
         print "\n--------------------------------TEST SET " + str(i) + " RESULT------------------------------\n"
         gp.remainBestOne()
-        gp.resetCounter()        
-        gp.excuteBlock(i, numBlock)
-        gp.evaluation(False)
-        antLogger.writeBlockResult(numSimulation, "Train_Best", gp.getStrStructureBest(), i)
+        
+        print "\tTest set result"        
+        gp.resetCounter()
+        gp.excuteBlock(i, numBlock, True)
+        gp.evaluation(True)
         antLogger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), i)
+        print ""
+        print "\tTrain set result"
+        gp.resetCounter()
+        gp.doGame(i,numBlock)
+        gp.evaluation(True)
+        antLogger.writeSimulationResult(numSimulation, "Train_Percent", gp.getStrGenerationPercent(), i)
+        antLogger.writeBlockResult(numSimulation, "Train_Best", gp.getStrStructureBest(), i)
         print "\n-------------------------------------------------------------------------------"
 
 nameFile = "./iris.csv"

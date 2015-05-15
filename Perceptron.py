@@ -119,6 +119,8 @@ class PERCEPTRON(object):
         
         #Rectifier
         expectedOutput = total - self.threshold + 1.0
+        expectedOutput = min(1.0,expectedOutput)
+        
         return max(0,expectedOutput)
         
         
