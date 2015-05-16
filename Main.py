@@ -117,12 +117,13 @@ print sys.argv
 antLogger = Logger.LOGGER()
 antLogger.initLogger(nameFile,"../results/",activate=True)
 
-if shellExcuteBlock == -1:
+if shellExecuteBlock == -1:
     numTimes = 0
     while numTimes < 10:
         learningLeannCrossValidation(antLogger, nameFile, numSimulation=numTimes)
         numTimes += 1
         print "\n" + str(numTimes) + " Simulation is ended."
 else:
+    excuteSingleBlockCrossValidation(shellExcuteBlock, logger, nameFile, numSimulation=0, numBlock=10)
     
     
