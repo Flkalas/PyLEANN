@@ -78,18 +78,18 @@ def excuteSingleBlockCrossValidation(indexBlock, logger, nameFile, numSimulation
                 
     print "\n--------------------------------TEST SET " + str(indexBlock) + " RESULT------------------------------\n"
     gp.remainBestOne()
-    
-    print "\tTest set result"        
-    gp.resetCounter()
-    gp.excuteBlock(indexBlock, numBlock, True)
-    gp.evaluation(True)
-    logger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), indexBlock)
-    print ""
     print "\tTrain set result"
     gp.resetCounter()
     gp.doGame(indexBlock,numBlock)
-    gp.evaluation(True)
-    logger.writeSimulationResult(numSimulation, "Train_Percent", gp.getStrGenerationPercent(), indexBlock)
+    gp.calSolvingPercentage()
+    logger.writeSimulationResult(numSimulation, "Train_Percent", gp.getStrGenerationPercent(), indexBlock)    
+    print ""
+    print "\tTest set result"        
+    gp.resetCounter()
+    gp.excuteBlock(indexBlock, numBlock, True)
+    gp.calSolvingPercentage()
+    logger.writeSimulationResult(numSimulation, "Test_Percent", gp.getStrGenerationPercent(), indexBlock)
+    
     logger.writeBlockResult(numSimulation, "Train_Best", gp.getStrStructureBest(), indexBlock)
     print "\n-------------------------------------------------------------------------------"
         
@@ -100,19 +100,19 @@ def learningLeannCrossValidation(logger, nameFile, numSimulation=0, numBlock=10)
 
 nameFile = "./iris.csv"
 shellExecuteBlock = -1
+print sys.argv, len(sys.argv) 
 if len(sys.argv) > 1:
     nameFile = sys.argv[1]
     if not os.path.isfile(nameFile):
         print "There is no test set named as ", nameFile
         nameFile = "./iris.csv"
         
-    if len(sys.argv) > 3:
-        shellExcuteBlock = int(sys.argv[2])
+    if len(sys.argv) == 3:
+        shellExecuteBlock = int(sys.argv[2])        
         if shellExecuteBlock > 9:
-            print "Execute block number out of range", shellExcuteBlock
-            shellExecuteBlock = -1
-            
-print sys.argv
+            print "Execute block number out of range", shellExecuteBlock
+            shellExecuteBlock = -1            
+print nameFile, shellExecuteBlock
 
 antLogger = Logger.LOGGER()
 antLogger.initLogger(nameFile,"../results/",activate=True)
@@ -124,6 +124,4 @@ if shellExecuteBlock == -1:
         numTimes += 1
         print "\n" + str(numTimes) + " Simulation is ended."
 else:
-    excuteSingleBlockCrossValidation(shellExcuteBlock, logger, nameFile, numSimulation=0, numBlock=10)
-    
-    
+    excuteSingleBlockCrossValidation(shellExecuteBlock, antLogger, nameFile, numSimulation=0, numBlock=10)

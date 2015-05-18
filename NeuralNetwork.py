@@ -208,9 +208,9 @@ class NEURAL_NETWORK(object):
     def initbyDigest(self,cellHunter,cellPrey):
         pass
 
-    def calculate(self, dataX):        
+    def calculate(self, dataX, indexStartLayer=0, mode=0):        
         outputData = dataX
-        for i in range(len(self.layer)):
+        for i in range(indexStartLayer, len(self.layer)):
             inputData = outputData
             outputData = []
             for j in range(len(self.layer[i])):
@@ -228,7 +228,7 @@ class NEURAL_NETWORK(object):
 #                         print "zero Peceptron"
 #                         print id(self)
 #                         print self
-                outputData.append(self.layer[i][j].calculate(inputData))
+                outputData.append(self.layer[i][j].calculate(inputData,mode))
         return outputData
     
     def mutate(self,sizeX):
@@ -246,8 +246,9 @@ class NEURAL_NETWORK(object):
         
 #         self.printLayer()
         self.degenSimilarity()
-        self.degenUniquness()
+        self.degenQMalgorithm()
         self.degenLayer()
+#         self.degenUniquness()
         
         
     def mergeConnectedGraph(self,listSetSimilarity):            
@@ -324,6 +325,107 @@ class NEURAL_NETWORK(object):
 
         return len(listSetSimilarity) > 0
     
+    
+    def degenQMalgorithm(self):
+        import quine_mccluskey.qm
+
+        listOptimizedOutput = []
+        listIsOneLayer = [False for _ in range(self.getSizeOutput())]
+        for outputIndex in range(self.getSizeOutput()):
+            listAllRef = self.getAllReferenced(outputIndex)            
+            numZeroPendding = len(self.layer[0])
+            baseInput = [0 for _ in range(numZeroPendding)]
+                        
+            ones = []                        
+            for sizeSet in range(len(listAllRef)+1):
+                for subSet in itertools.combinations(listAllRef,sizeSet):
+                    testInput = copy.deepcopy(baseInput)
+                    listSubset = list(subSet)
+                    for eachInput in listSubset:
+                        testInput[eachInput] = 1
+                        
+                    testOutput = self.calculate(testInput, 1, 1)                        
+                    if testOutput[outputIndex] == 1:
+                        strBinary = ""
+                        for eachIndex in testInput:
+                            strBinary = str(eachIndex)+strBinary
+                        numberOne = int(strBinary,2)
+                        ones.append(numberOne)                        
+            
+            qmActor = quine_mccluskey.qm.QuineMcCluskey()
+            qmResult = list(qmActor.simplify(ones))
+            
+            listIsPassing = [False for _ in range(len(qmResult))]
+            listANDgates = []
+            for i, eachResult in enumerate(qmResult):
+                eachResult = eachResult[::-1]                
+                cnt = eachResult.count('1')
+                
+                if cnt == 1:
+                    listIsPassing[i] = True
+                
+                inputsAND = []
+                prevPosition  = 0
+                for _ in range(cnt):
+                    nowPosition = eachResult.find('1',prevPosition)
+                    inputsAND.append(nowPosition)
+                    prevPosition = nowPosition+1
+                
+                listANDgates.append(inputsAND)
+
+            listIsOneLayer[outputIndex] = all(listIsPassing) or (len(listANDgates)==1)
+            listOptimizedOutput.append(listANDgates)
+
+        #Gen new layer
+        newLayers = []
+        if all(listIsOneLayer):
+            newLayer = []
+            for eachOutput in listOptimizedOutput:
+                newPerceptron = Perceptron.PERCEPTRON()
+                if len(eachOutput) == 1:
+                    newPerceptron.initbyANDgateList(eachOutput[0])
+                else:                    
+                    reducedList = reduce(operator.add, eachOutput)
+                    newPerceptron.initbyORgateList(reducedList)                    
+                newLayer.append(newPerceptron)
+                
+            newLayers.append(newLayer)
+        else:
+            #unique list of list            
+            setANDgate = set()
+            for eachOutput in listOptimizedOutput:
+                for eachANDindexes in eachOutput:
+                    setANDgate.add(tuple(eachANDindexes))
+            uniqueANDindexes = [list(indexesAND) for indexesAND in setANDgate]            
+            
+            #AND LAYER
+            newANDLayer = []
+            for eachANDindexes in uniqueANDindexes:
+                newPerceptron = Perceptron.PERCEPTRON()
+                newPerceptron.initbyANDgateList(eachANDindexes)
+                newANDLayer.append(newPerceptron)
+            newLayers.append(newANDLayer)
+                        
+            #OR LAYER
+            newORLayer = []
+            for eachOutput in listOptimizedOutput:
+                indexesOR = []
+                for eachANDindexes in eachOutput:
+                    for i, eachLayerIndexes in enumerate(uniqueANDindexes):
+                        if set(eachANDindexes) == set(eachLayerIndexes):
+                            indexesOR.append(i)
+                            break
+                
+                newPerceptron = Perceptron.PERCEPTRON()
+                newPerceptron.initbyORgateList(indexesOR)
+                newORLayer.append(newPerceptron)                
+            newLayers.append(newORLayer)
+        
+        self.layer = [self.layer[0]]
+        self.layer.extend(newLayers)
+        
+        return len(self.layer)
+                
     def degenUniquness(self):
         if self.getSizeLayer() < 3:
             return False
@@ -735,17 +837,12 @@ class NEURAL_NETWORK(object):
         return fusingPC
     
     def calPeceptronWeight(self,numInput):
-        
-        def calORgateValue(numInput):
-            return 2.0 / float(numInput+1)
-    
-        def calANDgateValue(numInput):
-            return 2.0 / (2.0*float(numInput-1)) / (float(numInput)+1)
+        temp = Perceptron.PERCEPTRON()
         
         if random.random() < 0.5:
-            return calANDgateValue(numInput)
+            return temp.calANDgateValue(numInput)
         else:
-            return calORgateValue(numInput)
+            return temp.calORgateValue(numInput)
     
     def getRefStructure(self,numOutput):
         if self.checkIndexInLayer(numOutput):

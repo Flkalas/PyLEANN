@@ -87,20 +87,37 @@ class PERCEPTRON(object):
         self.weights = list(gaussianEleimination(prbPool.getPointsInProblemBox(numInput),self.indexes))
         self.region = bool(random.getrandbits(1))
         
+    def initbyANDgateList(self,listIndex):
+        numInput = len(listIndex)
+        self.threshold = 1.0/(numInput+1)
+        self.indexes = listIndex
+        weightValue = self.calANDgateValue(numInput)
+        self.weights = [weightValue for _ in range(numInput) ]
+        self.region = True        
+        
+    def initbyORgateList(self,listIndex):
+        numInput = len(listIndex)
+        self.threshold = 1.0/(numInput+1)
+        self.indexes = listIndex
+        weightValue = self.calORgateValue(numInput)
+        self.weights = [weightValue for _ in range(numInput) ]
+        self.region = True
+                
+    def calORgateValue(self, numInput):
+        return 2.0 / float(numInput+1)
+
+    def calANDgateValue(self, numInput):
+        return 2.0 / (2.0*float(numInput)-1.0) / (float(numInput)+1)        
+        
     def __str__(self):
         return str(self.numInput()) +"  " + str(round(self.threshold,2)) + str(self.indexes) + str(self.weights) + str(self.region)
     
-    def calculate(self, dataX):
+    def calculate(self, dataX, mode=0):
         
         # double calculate(double* dataX, int numInput, double* weights, int* indexes, bool region);
 #         cPc = cPerceptron(dataX, self.numInput, self.weights, self.indexes, self.region)        
 #         return cPcCalculate(ctypes.byref(cPc))
         
-        
-        
-        
-        
-       
         total = 0       
           
         for i in range(self.numInput()):
@@ -111,18 +128,19 @@ class PERCEPTRON(object):
                     pass
             total += self.weights[i]*dataX[self.indexes[i]]
   
-        #step function
-#         if (total < self.threshold) == self.region:
-#             return 0
-#         else:
-#             return 1
-        
-        #Rectifier
-        expectedOutput = (total - self.threshold)*2.0 + 1.0
-        expectedOutput = min(1.0,expectedOutput)
-        
-        return max(0,expectedOutput)
-        
+  
+        if mode == 0:
+            #Rectifier
+            expectedOutput = (total - self.threshold)*2.0 + 1.0
+            expectedOutput = min(1.0,expectedOutput)
+            
+            return max(0,expectedOutput)
+        else:                        
+            #step function
+            if (total < self.threshold) == self.region:
+                return 0
+            else:
+                return 1
         
     def arrangeIndexes(self,numLayer,stack):
         if numLayer < 0:
@@ -222,19 +240,19 @@ class PERCEPTRON(object):
         return False
                     
     def isORgate(self):        
-        sumANDgateWeights = self.calANDgateValue()*float(self.calOriginalNumInput())        
+        sumANDgateWeights = self.calANDgateValue(self.calOriginalNumInput())*float(self.calOriginalNumInput())        
         return sumANDgateWeights != sum(self.weights)
         
     def calOriginalNumInput(self):
         return int((1.0/self.threshold) - 1.0)
         
-    def calANDgateValue(self):
-        numInput = float(self.numInput())
-        
-        if numInput < 2.0:
-            return 1.0
-        
-        return 2.0 / (2.0*(numInput-1)) / (numInput+1)
+#     def calANDgateValue(self):
+#         numInput = float(self.numInput())
+#         
+#         if numInput < 2.0:
+#             return 1.0
+#         
+#         return 2.0 / (2.0*(numInput)-1) / (numInput+1)
     
     def isSmallerThan(self,comparedOne):
         srcIndexSet = set(self.indexes)
@@ -244,8 +262,7 @@ class PERCEPTRON(object):
             return not self.isORgate()
         else:
             return comparedOne.isORgate()
-                   
-        
+
         
         
         
