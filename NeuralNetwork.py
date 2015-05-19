@@ -189,13 +189,22 @@ class NEURAL_NETWORK(object):
         numOutput = parents[0].getSizeOutput()
         numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
+        numLayer = []
+        for eachParent in parents:
+            numLayer.append(eachParent.getSizeLayer())
+        maxLayer = max(numLayer)        
+        
+        extendedParents = []
+        for eachParent in parents:
+            extendedParents.append(eachParent.extendLayer(maxLayer))
+                
         self.layer = [[] for _ in range(numBasicLayer)]
         
-        for i, eachParent in enumerate(parents):
+        for i, eachParent in enumerate(extendedParents):
             for j in range(numBasicLayer):
                 for k in range(len(eachParent.layer[j])):
                     newPC = copy.deepcopy(eachParent.layer[j][k])
-                    newPC.adjustIndexesByParents(i,j,parents)                    
+                    newPC.adjustIndexesByParents(i,j,extendedParents)                    
                     self.layer[j].append(newPC)
         
         mergingLayer = [self.createMergingPerceptron(i, numOutput) for i in range(numOutput)]

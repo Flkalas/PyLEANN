@@ -79,9 +79,9 @@ class GENE_POOL(object):
     
     def evaluationLR(self,enablePrintBest=False):
         newGenePool = []
-#         for i in range(-2, self.prbPool.sizeY+1):
-#             temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=self.dictTransfer[self.strTransfer])
-#             newGenePool.append(copy.deepcopy(temp[0]))        
+        for i in range(-2, self.prbPool.sizeY+1):
+            temp = sorted(self.genePool, key=lambda cell: cell.getCount(i), reverse=self.dictTransfer[self.strTransfer])
+            newGenePool.append(copy.deepcopy(temp[0]))        
 #         print len(newGenePool)
                 
         bankSize = self.initPopu/(self.prbPool.sizeY+3)
@@ -342,9 +342,8 @@ class GENE_POOL(object):
         for i in range(-1,self.prbPool.sizeY):
             for _ in range(populationEvolution):
                 if random.random() < self.probMacroEvolution:
-                    parents = self.selection(i)
-                    if parents[0].getSizeLayer() == parents[1].getSizeLayer():
-                        self.genePool.append(self.macroevolution(parents))
+                    parents = self.selection(i)                    
+                    self.genePool.append(self.macroevolution(parents))
 
                 elif random.random() < self.probMicroEvolution:
                     parents = self.selection(i)
@@ -355,7 +354,8 @@ class GENE_POOL(object):
                                
     def newGene(self):
         prePopu = len(self.genePool)
-        populationNewGene = int((1.0-self.maxPercentage)*len(self.genePool))
+#         populationNewGene = int(1.0-self.maxPercentage)*len(self.genePool)
+        populationNewGene = int(1.0*len(self.classPercentage[0])-sum(self.classPercentage[0]))*len(self.genePool)
         for _ in range(populationNewGene):
             newCell = Cell.CELL()
             newCell.initbyPrbpool(self.prbPool)
@@ -398,7 +398,10 @@ class GENE_POOL(object):
                 for cell in self.genePool:
                     classPercentage[i].append((float(self.numSolvePrb) - float(cell.getCount(i)))/float(self.numSolvePrb))
                     
-        self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY+1)],[numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY+1)]]
+                    
+        self.classPercentage = [[max(classPercentage[i]) for i in range(self.prbPool.sizeY+1)],
+                                [numpy.mean(classPercentage[i]) for i in range(self.prbPool.sizeY+1)]]
+#         print self.classPercentage
         self.maxPercentage = self.classPercentage[0][0]
         self.avgPercentage = self.classPercentage[1][0]
 
