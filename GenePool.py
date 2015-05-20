@@ -20,9 +20,9 @@ class GENE_POOL(object):
             
         self.initPopu=numPopulation
         self.probCrossover = 0.7
-        self.probMutation = 0.5
-        self.probMacroEvolution = 0.7
-        self.probMicroEvolution = 0.4
+        self.probMutation = 0.3
+        self.probMacroEvolution = 0.1
+        self.probMicroEvolution = 0.2
         
         self.numSolvePrb = 0
         self.previousMaxPercentage = -1.0

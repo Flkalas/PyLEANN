@@ -6,7 +6,9 @@ import itertools
 
 import Perceptron
 import quine_mccluskey.qm
-qmActor = quine_mccluskey.qm.QuineMcCluskey()
+import onesQM
+#qmActor = quine_mccluskey.qm.QuineMcCluskey()
+qmActor = onesQM.QM()
 
 class NEURAL_NETWORK(object):
     def __init__(self):
@@ -369,8 +371,8 @@ class NEURAL_NETWORK(object):
                         for eachIndex in testInput:
                             strBinary = str(eachIndex)+strBinary
                         numberOne = int(strBinary,2)
-                        ones.append(numberOne)                        
-            
+                        ones.append(numberOne)
+                        
 #             import qm
 #             qmResult = qm.qm(ones)
             qmResult = list(qmActor.simplify(ones))            
