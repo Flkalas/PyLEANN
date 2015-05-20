@@ -91,11 +91,11 @@ class GENE_POOL(object):
         for i in range(-2, self.prbPool.sizeY+1):
             prevSize = 0
             
-            listSelected = copy.deepcopy(self.selection(i,bankSize/12,3))
+            listSelected = copy.deepcopy(self.selection(i,bankSize/15,3))
             prevSize += len(listSelected)
             newGenePool += listSelected
             
-            listSelected = copy.deepcopy(self.selection(i,bankSize/3,2))
+            listSelected = copy.deepcopy(self.selection(i,bankSize/5,2))
             prevSize += len(listSelected)
             newGenePool += listSelected
             

@@ -365,7 +365,7 @@ class NEURAL_NETWORK(object):
                     for eachInput in listSubset:
                         testInput[eachInput] = 1
                         
-                    testOutput = self.calculate(testInput, 1, 1)                        
+                    testOutput = self.calculate(testInput, 1, 1)
                     if testOutput[outputIndex] == 1:
                         strBinary = ""
                         for eachIndex in testInput:
@@ -375,6 +375,7 @@ class NEURAL_NETWORK(object):
                         
 #             import qm
 #             qmResult = qm.qm(ones)
+            print len(ones)
             qmResult = list(qmActor.simplify(ones))            
             
             listIsPassing = [False for _ in range(len(qmResult))]

@@ -26,8 +26,6 @@ class QM(object):
         resultEnableBlocks = self.selectBlocks(originalDecodedOnes,listResult)
         if len(resultEnableBlocks) > 2:
             print resultEnableBlocks
-            while(True):
-                pass
         
         return resultEnableBlocks[0]
         
@@ -130,4 +128,4 @@ class QM(object):
         
         return listDepressedOnes
     
-        
+
