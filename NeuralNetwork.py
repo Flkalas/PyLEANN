@@ -5,6 +5,8 @@ import operator
 import itertools
 
 import Perceptron
+import quine_mccluskey.qm
+qmActor = quine_mccluskey.qm.QuineMcCluskey()
 
 class NEURAL_NETWORK(object):
     def __init__(self):
@@ -336,8 +338,7 @@ class NEURAL_NETWORK(object):
     
     
     def degenQMalgorithm(self):
-        import quine_mccluskey.qm
-        qmActor = quine_mccluskey.qm.QuineMcCluskey()
+        
 
         listOptimizedOutput = []
         listIsOneLayer = [False for _ in range(self.getSizeOutput())]
