@@ -21,7 +21,7 @@ class GENE_POOL(object):
         self.initPopu=numPopulation
         self.probCrossover = 0.7
         self.probMutation = 0.5
-        self.probMacroEvolution = 0.3
+        self.probMacroEvolution = 0.7
         self.probMicroEvolution = 0.4
         
         self.numSolvePrb = 0
@@ -444,23 +444,26 @@ class GENE_POOL(object):
                 
     def statLayerCount(self):
         
-        stats = [[] for _ in range(10)]
+        stats = [0 for _ in range(3)]
         
         for eachCell in self.genePool:
-            stats[eachCell.getSizeLayer()].append(eachCell.getArrayClassCount())
+            stats[eachCell.getSizeLayer()-1] += 1
             
-#         stats = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
-        for i, eachLayerPool in enumerate(stats):
-            eachLayerPool.sort(key=lambda statArray: sum(statArray), reverse=True)            
+        for i, eachStat in enumerate(stats):            
+            print i, eachStat
             
-            for j, elements in enumerate(eachLayerPool):
-                if j == 0:
-                    print elements
-                
-                if j > 4:
-                    break
-                
-                print i, j, sum(elements), elements
+# #         stats = sorted(self.genePool, key=lambda cell: cell.getCountRight(), reverse=True)
+#         for i, eachLayerPool in enumerate(stats):
+#             eachLayerPool.sort(key=lambda statArray: sum(statArray), reverse=True)            
+#             
+#             for j, elements in enumerate(eachLayerPool):
+#                 if j == 0:
+#                     print elements
+#                 
+#                 if j > 4:
+#                     break
+#                 
+#                 print i, j, sum(elements), elements
                 
     def remainBestOne(self):
         

@@ -338,7 +338,8 @@ class NEURAL_NETWORK(object):
     
     
     def degenQMalgorithm(self):
-        
+        if self.getSizeLayer() < 3:
+            return False
 
         listOptimizedOutput = []
         listIsOneLayer = [False for _ in range(self.getSizeOutput())]
@@ -363,6 +364,8 @@ class NEURAL_NETWORK(object):
                         numberOne = int(strBinary,2)
                         ones.append(numberOne)                        
             
+#             import qm
+#             qmResult = qm.qm(ones)
             qmResult = list(qmActor.simplify(ones))            
             
             listIsPassing = [False for _ in range(len(qmResult))]
