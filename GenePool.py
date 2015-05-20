@@ -89,9 +89,19 @@ class GENE_POOL(object):
             bankSize = 10
         
         for i in range(-2, self.prbPool.sizeY+1):
-            listSelected = copy.deepcopy(self.selection(i,bankSize))
-#             print "\t", i, len(listSelected)
+            prevSize = 0
+            
+            listSelected = copy.deepcopy(self.selection(i,bankSize/12,3))
+            prevSize += len(listSelected)
             newGenePool += listSelected
+            
+            listSelected = copy.deepcopy(self.selection(i,bankSize/3,2))
+            prevSize += len(listSelected)
+            newGenePool += listSelected
+            
+            listSelected = copy.deepcopy(self.selectionRandom(bankSize-prevSize,1))
+            newGenePool += listSelected
+            
             
         if enablePrintBest:
             self.genePool.sort(key=lambda cell: cell.getCount(0), reverse=self.dictTransfer[self.strTransfer])
@@ -186,25 +196,47 @@ class GENE_POOL(object):
             self.numGenStaturated = 0
             
         return True
+    
+    def selectionRandom(self, numToSelection=2, sizeLayer=-1):
+        newPool = []
+        if sizeLayer == -1:
+            newPool = self.genePool
+        else:
+            for eachCell in self.genePool:
+                if eachCell.getSizeLayer() == sizeLayer:
+                    newPool.append(eachCell)
+                    
+        return copy.deepcopy(random.sample(newPool,numToSelection))        
         
-    def selection(self, indexOutput=-1, numToSelection=2):
+    def selection(self, indexOutput=-1, numToSelection=2, sizeLayer=-1):
         if numToSelection == 0:
             return []
         
-        self.genePool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=self.dictTransfer[self.strTransfer])
+        newPool = []
+        if sizeLayer == -1:
+            newPool = self.genePool
+        else:
+            for eachCell in self.genePool:
+                if eachCell.getSizeLayer() == sizeLayer:
+                    newPool.append(eachCell)
+        
+        if len(newPool) == 0:
+            return []
+                
+        newPool.sort(key=lambda cell: cell.getCount(indexOutput), reverse=self.dictTransfer[self.strTransfer])
                 
         totalCount = 0.0
         maxCount = 0.0         
-        for cell in self.genePool:
+        for cell in newPool:
             cellCount = cell.getCount(indexOutput)
             totalCount += cellCount
             if cellCount > maxCount:
                 maxCount = cellCount
                 
         if not self.dictTransfer[self.strTransfer]:
-            totalCount = maxCount*len(self.genePool) - totalCount
+            totalCount = maxCount*len(newPool) - totalCount
             
-        totalCount += len(self.genePool)
+        totalCount += len(newPool)
             
         selected = []
         for _ in range(numToSelection):
@@ -230,11 +262,11 @@ class GENE_POOL(object):
 
             if eachSel < 1:
 #                 print "\tsame : ", eachSel
-                selectedCell.append(copy.deepcopy(self.genePool[indexGenePool-1]))
+                selectedCell.append(copy.deepcopy(newPool[indexGenePool-1]))
                 prevDebt = eachSel
                 continue
             else:                
-                for indexNow, eachCell in enumerate(self.genePool[indexGenePool:]):
+                for indexNow, eachCell in enumerate(newPool[indexGenePool:]):
                     eachCount = eachCell.getCount(indexOutput)
                     if not self.dictTransfer[self.strTransfer]:
                         eachCount = maxCount - eachCount

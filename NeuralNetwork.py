@@ -186,24 +186,28 @@ class NEURAL_NETWORK(object):
         
         return self.checkIntegrity(numRealOutput,"MICRO")
         
-    def initbyMacevol(self, parents):
-        numBasicLayer = parents[0].getSizeLayer()
+    def initbyMacevol(self, parents):        
         numOutput = parents[0].getSizeOutput()
         numRealOutput  = min([eachParent.getSizeOutput() for eachParent in parents])
         
+#         print "PARENTS"
         numLayer = []
         for eachParent in parents:
             numLayer.append(eachParent.getSizeLayer())
+#             eachParent.printLayer()
         maxLayer = max(numLayer)        
         
+#         print "EXTENDED PARENTS"
         extendedParents = []
         for eachParent in parents:
-            extendedParents.append(eachParent.extendLayer(maxLayer))
-                
-        self.layer = [[] for _ in range(numBasicLayer)]
+            newParent = eachParent.extendLayer(maxLayer)
+#             newParent.printLayer()
+            extendedParents.append(newParent)
+
+        self.layer = [[] for _ in range(maxLayer)]
         
         for i, eachParent in enumerate(extendedParents):
-            for j in range(numBasicLayer):
+            for j in range(maxLayer):
                 for k in range(len(eachParent.layer[j])):
                     newPC = copy.deepcopy(eachParent.layer[j][k])
                     newPC.adjustIndexesByParents(i,j,extendedParents)                    
@@ -211,6 +215,9 @@ class NEURAL_NETWORK(object):
         
         mergingLayer = [self.createMergingPerceptron(i, numOutput) for i in range(numOutput)]
         self.layer.append(mergingLayer)
+        
+#         print "before Degen"
+#         self.printLayer()
         
         self.degeneration()
         
