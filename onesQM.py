@@ -11,8 +11,6 @@ class QM(object):
         originalDecodedOnes = self.decodeOnes(ones)
         onesToProcess = copy.deepcopy(originalDecodedOnes)
         
-        print self.sizeBit, len(originalDecodedOnes)
-        
         #Phase 1
         listResult = []
         isNotEnd = True
@@ -99,14 +97,10 @@ class QM(object):
                 setResultCombination = set()
                 listCombination = list(eachCombination)
                 
-                for eachCompressedOne in listCombination:
-                    
+                for eachCompressedOne in listCombination:                    
                     listDepressedOnes = self.getAllOnes(eachCompressedOne)                    
-                    setDepressedOnes = set(listDepressedOnes)
-                    #print listDepressedOnes, setDepressedOnes
-                    
+                    setDepressedOnes = set(listDepressedOnes)                    
                     setResultCombination = setResultCombination.union(setDepressedOnes)
-                    #print setResultCombination
                     
                 if setResultCombination == setRawOnes:
                     enableCombination.append(listCombination)
