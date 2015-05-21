@@ -375,8 +375,11 @@ class NEURAL_NETWORK(object):
                         
 #             import qm
 #             qmResult = qm.qm(ones)
-            print len(ones)
-            qmResult = list(qmActor.simplify(ones))            
+            if len(ones) < 700:                
+                qmResult = list(qmActor.simplify(ones))
+            else:
+                print "It's Too Big. ", len(ones)
+                return False            
             
             listIsPassing = [False for _ in range(len(qmResult))]
             listANDgates = []
