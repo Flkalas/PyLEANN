@@ -266,9 +266,10 @@ class NEURAL_NETWORK(object):
         
 #         self.printLayer()
         self.degenSimilarity()
-        self.degenQMalgorithm()
+        if self.degenQMalgorithm():
+            self.degenUniquness()
         self.degenLayer()
-#         self.degenUniquness()
+        
         
         
     def mergeConnectedGraph(self,listSetSimilarity):            
@@ -379,7 +380,7 @@ class NEURAL_NETWORK(object):
                 qmResult = list(qmActor.simplify(ones))
             else:
                 print "It's Too Big. ", len(ones)
-                return False            
+                return True            
             
             listIsPassing = [False for _ in range(len(qmResult))]
             listANDgates = []
@@ -450,7 +451,7 @@ class NEURAL_NETWORK(object):
         self.layer = [self.layer[0]]
         self.layer.extend(newLayers)
         
-        return len(self.layer)
+        return False
                 
     def degenUniquness(self):
         if self.getSizeLayer() < 3:
