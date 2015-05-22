@@ -5,7 +5,7 @@ import operator
 import itertools
 
 import Perceptron
-import quine_mccluskey.qm
+# import quine_mccluskey.qm
 import onesQM
 #qmActor = quine_mccluskey.qm.QuineMcCluskey()
 qmActor = onesQM.QM()
