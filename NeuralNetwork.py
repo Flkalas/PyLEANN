@@ -376,7 +376,9 @@ class NEURAL_NETWORK(object):
                         
 #             import qm
 #             qmResult = qm.qm(ones)
-            if len(ones) < 700:                
+            if len(ones) < 700:
+                if len(ones) > 200:
+                    print len(ones)
                 qmResult = list(qmActor.simplify(ones))
             else:
                 print "It's Too Big. ", len(ones)
