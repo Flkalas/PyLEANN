@@ -86,42 +86,56 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
         for i in range(len(self.sights)):
             self.sights[i].initSightByParents(parents,i,sizeLayer)
                     
-    def solveProblem(self, prb, solveWithoutSight=False):
-        answer = self.calculate(prb[0])
+    def solveProblem(self, prb, solveWithoutSight=False, mode=0):
+        answer = self.calculate(prb[0],mode)
+        
+        self.evaluate(prb, answer, solveWithoutSight, mode)
 #         print answer
+
+    def evaluate(self,prb,answer,solveWithoutSight,mode=0):
         boolRight = True
         for i in range(len(prb[1])):            
-            if self.sights[i].isInSight(prb[0]) or solveWithoutSight:
-                
-                #for rectifier
-                self.countFeedRate[i+1] += abs(answer[i] - float(prb[1][i]))                
-                                
-                #for step function
-#                 if answer[i] == prb[1][i]:
-#                     self.countFeedRate[i+1] += 1
-#                 else:
-#                     boolRight = False
+            if self.sights[i].isInSight(prb[0]) or solveWithoutSight:                
+                if mode == 0 or mode == 2:
+                    #for rectifier
+                    self.countFeedRate[i+1] += abs(answer[i] - float(prb[1][i]))
+                elif mode == 1: 
+                    #for step function
+                    if answer[i] == prb[1][i]:
+                        self.countFeedRate[i+1] += 1
+                    else:
+                        boolRight = False
             else:
                 boolRight = False
+                if mode == 0 or mode == 2:
+                    #for rectifier
+                    self.countFeedRate[i+1] += 1.0
                 
+        if boolRight:            
+            if mode == 0:
                 #for rectifier
-                self.countFeedRate[i+1] += 1.0
+                maxIndex = 0
+                for i, eachOutput in enumerate(answer):
+                    if abs(eachOutput-1.0) < abs(answer[maxIndex]-1.0):
+                        maxIndex = i
+            
+                if prb[1][maxIndex] != 1:
+                    self.countFeedRate[0] += 1.0                    
+            
+            elif mode == 1:
+                #for step functoin
+                self.countFeedRate[0] += 1
                 
-        if boolRight:
-            #for step functoin
-#             self.countFeedRate[0] += 1
-            
-            #for rectifier
-            maxIndex = 0
-            for i, eachOutput in enumerate(answer):
-                if abs(eachOutput-1.0) < abs(answer[maxIndex]-1.0):
-                    maxIndex = i
-            
-            if prb[1][maxIndex] != 1:
-                self.countFeedRate[0] += 1.0    
+            elif mode == 2:
+                sumResult = 0.0
+                for i in range(len(answer)):
+                    sumResult += abs(answer[i] - float(prb[1][i]))
+                    self.countFeedRate[0] += sumResult/len(answer)
                 
         else:
-            self.countFeedRate[0] += 1.0#for Rectifier
+            if mode == 0 or mode == 2:
+                #for Rectifier
+                self.countFeedRate[0] += 1.0
     
     def gainFeed(self,indexFeed,valFeed):
         self.feeds[indexFeed] += valFeed

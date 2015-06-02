@@ -1,6 +1,8 @@
 import re
 import random
 
+import NeuralNetwork
+
 def isFloat(string):
     
     if any(c.isalpha() for c in string):
@@ -13,7 +15,65 @@ def isFloat(string):
 class PROBLEM_POOL(object):
     def __init__(self):
         pass
+    
+    def initByNumbers(self,numInput,numOutput):
+        self.sizeX = numInput
+        self.sizeY = numOutput
+        
+        self.rangeX = []
+        for _ in range(self.sizeX):
+            self.rangeX.append([-1.0,1.0])
+            
+    def initByGenStr(self,numInput,numOutput,numLayer,logger):
+        targetStr = NeuralNetwork.NEURAL_NETWORK()
+        targetStr.genRandomStructure(numInput, numOutput, numLayer)
+
+        targetSTR = targetStr.getStrStructure()
+        print targetSTR
+        logger.writeBlockResult(0, "Generated_Str", targetStr.getStrStructure())
+
+        self.sizeX = numInput
+        self.sizeY = numOutput
+        
+        self.bankX = [[] for _ in range(numInput)]
+        self.bankXIsNumerical = [True for _ in range(numInput)]
+        self.rangeX = [[-1.0,1.0] for _ in range(numInput)]
+        self.bankY = [[] for _ in range(numOutput)]
+        self.nameY = {i: str(unichr(65+i)) for i in range(numOutput)}
+
+        self.sizeBank = 700
+        for _ in range(self.sizeBank):
+            dataX = self.genNormalizedInput(numInput)
+            dataY = targetStr.calculate(dataX)
+                        
+            for indexX, eachX in enumerate(dataX):
+                self.bankX[indexX].append(eachX)
                 
+            for indexY, eachY in enumerate(dataY):
+                self.bankY[indexY].append(eachY)
+                        
+    def genNormalizedInput(self,numInput):
+        listInput = []
+        for _ in range(numInput):
+            listInput.append(random.uniform(-1.0,1.0))
+        
+        return listInput
+    
+    def encodeOutput(self,listOutput):
+        maxIndex = 0
+        for i, valOutput in enumerate(listOutput):
+            if listOutput[maxIndex] < valOutput:
+                maxIndex = i
+        
+        encodedOutput = []
+        for i in range(len(listOutput)):
+            if i != maxIndex:
+                encodedOutput.append(0)
+            else:
+                encodedOutput.append(1)
+        
+        return encodedOutput
+                        
     def initFromFile(self,nameFile,onCrossValid=False,numBlock=10):
         with open(nameFile) as streamFile:
             totalSize = len(re.split(',| ',streamFile.readline().rstrip('\n')))            
@@ -222,6 +282,8 @@ class PROBLEM_POOL(object):
 # print prbPool.getPointsInProblemBox(5)
 # print prbPool.getOneProblemFromBank(5)
 # print prbPool.getRandomProblemFromBank()
+
+
 
 
 

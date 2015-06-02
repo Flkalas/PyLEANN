@@ -32,15 +32,15 @@ class GENE_POOL(object):
         self.dictTransfer = {"Rectifier": False,
                              "Step": True}
         
-    def doGame(self,blockBank = -1, numBlock = 10):
+    def doGame(self,blockBank = -1, numBlock = 10, mode=0):
         if blockBank == -1:
             self.excuteBlock(blockBank)
         else:
             for i in range(numBlock):
                 if i != blockBank:
-                    self.excuteBlock(i, numBlock)
+                    self.excuteBlock(i, numBlock, mode)
     
-    def excuteBlock(self,blockBank = -1, numBlock = 10, withoutSight=False):
+    def excuteBlock(self,blockBank = -1, numBlock = 10, mode=0, withoutSight=False ):
         if blockBank == -1:
             blockStart = 0
             blockEnd = self.prbPool.sizeBank
@@ -55,7 +55,7 @@ class GENE_POOL(object):
 #                 print prb, blockStart
 #                 print self.prbPool.sizeBank, numBlock, blockBank
             for cell in self.genePool:
-                cell.solveProblem(prb,withoutSight)
+                cell.solveProblem(prb,withoutSight,mode)
 
         return 0
     
@@ -550,15 +550,8 @@ class GENE_POOL(object):
     def getStrStructureBest(self):
         cellBest = self.genePool[0]
         
-        strStructure = ""
-        for i, eachLayer in enumerate(cellBest.layer):
-            strStructure += "Layer," + str(i) + "\n"
-            for j, eachPerceptron in enumerate(eachLayer):
-                strStructure += ",Perceptron," + str(j) + "\n"
-                for k in range(len(eachPerceptron.weights)):
-                    strStructure += ",,Index," + str(k) +",Input," + str(eachPerceptron.indexes[k]) +",Weights," +str(eachPerceptron.weights[k]) +"\n"
-        
-        return strStructure
+        return cellBest.getStrStructure()
+
     
     
 # prbPool = ProblemPool.PROBLEM_POOL("./balance.csv")

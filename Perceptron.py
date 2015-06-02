@@ -27,7 +27,7 @@ import ProblemPool
 # cPcCalculate.argtypes = [ctypes.POINTER(cPerceptron)]
 #cPcCalculate.restype = ctypes.c_double
 
-MIN_NUM_INPUT = const.MIN_NUM_INPUT = 2
+MIN_NUM_INPUT = const.MIN_NUM_INPUT = 1
 
 def gaussianEleimination(points, indexes):
     
@@ -79,7 +79,7 @@ class PERCEPTRON(object):
         self.indexes = []
         self.weights = []
         self.region = bool(random.getrandbits(1))
-        
+            
     def initbyPrbPool(self,prbPool):
         numInput = random.randint(MIN_NUM_INPUT,prbPool.sizeX)
         self.threshold = 1.0/(numInput+1)
@@ -129,7 +129,7 @@ class PERCEPTRON(object):
             total += self.weights[i]*dataX[self.indexes[i]]
   
   
-        if mode == 0:
+        if mode == 0 or mode == 2:
             #Rectifier
             expectedOutput = (total - self.threshold)*2.0 + 1.0
             expectedOutput = min(1.0,expectedOutput)

@@ -4,9 +4,10 @@ import random
 import operator
 import itertools
 
+import ProblemPool
 import Perceptron
-# import quine_mccluskey.qm
 import onesQM
+# import quine_mccluskey.qm
 #qmActor = quine_mccluskey.qm.QuineMcCluskey()
 qmActor = onesQM.QM()
 
@@ -234,21 +235,8 @@ class NEURAL_NETWORK(object):
             inputData = outputData
             outputData = []
             for j in range(len(self.layer[i])):
-#                 for oneIndex in self.layer[i][j].indexes:
-#                     if oneIndex >= len(inputData):
-#                         print "out of index"
-#                         print id(self)
-#                         print self
-#                         print "one"
-#                         print self.layer[i][j]
-#                         print "ERORR"
-#                         while True:
-#                             pass
-#                     if len(self.layer[i][j].indexes) <= 1:                        
-#                         print "zero Peceptron"
-#                         print id(self)
-#                         print self
                 outputData.append(self.layer[i][j].calculate(inputData,mode))
+                
         return outputData
     
     def mutate(self,sizeX):
@@ -974,9 +962,62 @@ class NEURAL_NETWORK(object):
             return True
         else:
             return False
+
+    def genRandomStructure(self,numInput,numOutput,numLayer):
+        prbPool = ProblemPool.PROBLEM_POOL()
+        prbPool.initByNumbers(numInput, numOutput)
+            
+        self.layer = []
+            
+        for i in range(numLayer):
+            if i == numLayer-1:
+                numPerceptron = numOutput
+            else:
+                numPerceptron = random.randint(numOutput,10)
+               
+            if i == 0:
+                newLayer = []
+                for _ in range(numPerceptron):
+                    newPC = Perceptron.PERCEPTRON()
+                    newPC.initbyPrbPool(prbPool)
+                    newLayer.append(newPC)
+                self.layer.append(newLayer)
+                    
+            else:
+                newLayer = []
+                for _ in range(numPerceptron):                    
+                    numPreLayer = len(self.layer[i-1])
+                    
+                    listIndex = sorted(list(random.sample(range(numPreLayer),random.randint(1,numPreLayer))))
+                    newPC = Perceptron.PERCEPTRON()
+                    if bool(random.getrandbits(1)):
+                        newPC.initbyANDgateList(listIndex)
+                    else:
+                        newPC.initbyORgateList(listIndex)
+                    newLayer.append(newPC)
+                self.layer.append(newLayer) 
+                
+    def getStrStructure(self):
+        strStructure = ""
+        for i, eachLayer in enumerate(self.layer):
+            strStructure += "Layer," + str(i) + "\n"
+            for j, eachPerceptron in enumerate(eachLayer):
+                strStructure += ",Perceptron," + str(j) + "\n"
+                for k in range(len(eachPerceptron.weights)):
+                    strStructure += ",,Index," + str(k) +",Input," + str(eachPerceptron.indexes[k]) +",Weights," +str(eachPerceptron.weights[k]) +"\n"
         
+        return strStructure        
 
     
+# newTest = NEURAL_NETWORK()
+# for i in range(2,10):
+#     for j in range(2,6):
+#         for k in range(3):
+#             print i,j,k
+#             newTest.genRandomStructure(i, j, k+1)
+#             print newTest
+            
+            
 # prbPool = ProblemPool.PROBLEM_POOL("./balance.csv")  
 # nn = NEURAL_NETWORK()
 # nn.initbyPrbpool(prbPool)
