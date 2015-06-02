@@ -211,12 +211,12 @@ class PROBLEM_POOL(object):
         # Convert the 0-1 range into a value in the right range.
         return rightMin + (valueScaled * rightSpan) 
     
-# prbPool = PROBLEM_POOL()
-# prbPool.initFromFile("./iris.csv",onCrossValid=True)
-# prbPool.printAllBank()
-# dump = raw_input("View")
-# prbPool.normalizer()
-# prbPool.printAllBank()
+# prbpool = PROBLEM_POOL()
+# prbpool.initFromFile("./iris.csv",True)
+# prbpool.printAllBank()
+# dump = raw_input("view")
+# prbpool.normalizer()
+# prbpool.printAllBank()
 # prbPool.printAllBank()
 
 # print prbPool.getPointsInProblemBox(5)
