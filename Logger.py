@@ -10,7 +10,7 @@ class LOGGER(object):
             os.makedirs(self.pathBasic)
 
         self.findPrefixNumber(nameTestFile)
-        self.activated = activate
+        self.activated = activate        
 
     def writePrefixFile(self,nameTestFile):
         fileOpened = open(self.pathBasic +"_"+ str(self.prefix) + ".txt",'w')

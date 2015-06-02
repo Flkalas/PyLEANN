@@ -24,13 +24,11 @@ class PROBLEM_POOL(object):
         for _ in range(self.sizeX):
             self.rangeX.append([-1.0,1.0])
             
-    def initByGenStr(self,numInput,numOutput,numLayer,logger):
+    def initByGenStr(self,numInput,numOutput,numLayer,logger,numSimulation):
         targetStr = NeuralNetwork.NEURAL_NETWORK()
         targetStr.genRandomStructure(numInput, numOutput, numLayer)
-
-        targetSTR = targetStr.getStrStructure()
-        print targetSTR
-        logger.writeBlockResult(0, "Generated_Str", targetStr.getStrStructure())
+        
+        logger.writeBlockResult(numSimulation, "Generated_Str", targetStr.getStrStructure())
 
         self.sizeX = numInput
         self.sizeY = numOutput

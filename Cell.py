@@ -87,7 +87,7 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
             self.sights[i].initSightByParents(parents,i,sizeLayer)
                     
     def solveProblem(self, prb, solveWithoutSight=False, mode=0):
-        answer = self.calculate(prb[0],mode)
+        answer = self.calculate(prb[0],mode=mode)
         
         self.evaluate(prb, answer, solveWithoutSight, mode)
 #         print answer

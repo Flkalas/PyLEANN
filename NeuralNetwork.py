@@ -235,6 +235,13 @@ class NEURAL_NETWORK(object):
             inputData = outputData
             outputData = []
             for j in range(len(self.layer[i])):
+                checkBool = self.layer[i][j].checkIntegrity(len(inputData))
+                if checkBool:                    
+                    print inputData, outputData, j, len(self.layer[i]), i, indexStartLayer, len(self.layer)
+                    self.printLayer()
+                    while checkBool:
+                        pass
+                
                 outputData.append(self.layer[i][j].calculate(inputData,mode))
                 
         return outputData

@@ -233,8 +233,9 @@ class PERCEPTRON(object):
         return len(self.indexes) 
     
     def checkIntegrity(self,numData):
-        for oneIndex in self.indexes:
+        for oneIndex in self.indexes:            
             if oneIndex >= numData:
+                print numData, oneIndex
                 print self
                 return True
         return False
