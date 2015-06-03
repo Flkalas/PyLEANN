@@ -655,9 +655,9 @@ class NEURAL_NETWORK(object):
         for singleIndex in pcIndexes:
             pcSet.append(self.layer[0][singleIndex])
             
-        if pcSet[0].region != pcSet[1].region:
-            return False
-        
+#         if pcSet[0].region != pcSet[1].region:
+#             return False
+
         if not self.isSameInput(pcSet):
             return False
                
@@ -1002,7 +1002,9 @@ class NEURAL_NETWORK(object):
                     else:
                         newPC.initbyORgateList(listIndex)
                     newLayer.append(newPC)
-                self.layer.append(newLayer) 
+                self.layer.append(newLayer)
+                
+        self.checkIntegrity(numOutput, "Generate Random")
                 
     def getStrStructure(self):
         strStructure = ""

@@ -41,12 +41,12 @@ class SIGHT(object):
         
         self.center = [random.normalvariate(eachAxis,1.0/((sizeLayer+0.1)**1.5)) for eachAxis in sightParentSelected.center]
 #         self.center = [random.random()*2.0-1.0 for _ in range(len(sightParentSelected.center))]
-#         self.sight = random.normalvariate(sightParentSelected.sight,0.1)
+        self.sight = random.normalvariate(sightParentSelected.sight,0.1)
                 
-        baseSight = (2.0*len(sightParentSelected.center))**(1.0/2.0)
-        baseSight /= 3.0**2
-        baseSight *= float(sizeLayer)**2
-        self.sight = abs(random.normalvariate(baseSight,0.3))
+#         baseSight = (2.0*len(sightParentSelected.center))**(1.0/2.0)
+#         baseSight /= 3.0**2
+#         baseSight *= float(sizeLayer)**2
+#         self.sight = abs(random.normalvariate(baseSight,0.3))
 
         return 0
         

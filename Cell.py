@@ -89,7 +89,7 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
     def solveProblem(self, prb, solveWithoutSight=False, mode=0):
         answer = self.calculate(prb[0],mode=mode)
         
-        self.evaluate(prb, answer, solveWithoutSight, mode)
+        self.evaluate(prb, answer, solveWithoutSight=solveWithoutSight, mode=mode)
 #         print answer
 
     def evaluate(self,prb,answer,solveWithoutSight,mode=0):
@@ -129,8 +129,10 @@ class CELL(NeuralNetwork.NEURAL_NETWORK):
             elif mode == 2:
                 sumResult = 0.0
                 for i in range(len(answer)):
+#                     print i, abs(answer[i] - float(prb[1][i]))
                     sumResult += abs(answer[i] - float(prb[1][i]))
-                    self.countFeedRate[0] += sumResult/len(answer)
+#                 print sumResult/len(answer), sumResult, len(answer)
+                self.countFeedRate[0] += sumResult/len(answer)
                 
         else:
             if mode == 0 or mode == 2:

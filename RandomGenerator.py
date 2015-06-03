@@ -1,6 +1,7 @@
 import Logger
 import GenePool
 import ProblemPool
+import NeuralNetwork
 
 def singleRandomStructureTest(numInput, numOutput, numLayer, logger, numSimulation):                
     prbPool = ProblemPool.PROBLEM_POOL()
@@ -59,10 +60,14 @@ simulLogger.initLogger("Aritifitial Generated","../results/",activate=True)
 
 numSimulation = 0
 
-for iterInput in range(2,13):
-    for iterOutput in range(2,6):
-        for iterLayer in range(1,3):
+for iterInput in range(2,14):
+    for iterOutput in range(2,7):
+        for iterLayer in range(1,4):
             singleRandomStructureTest(iterInput,iterOutput,iterLayer,simulLogger, numSimulation)
+#             nn = NeuralNetwork.NEURAL_NETWORK()
+#             nn.genRandomStructure(iterInput, iterOutput, iterLayer)
+#             print iterInput, iterOutput, iterLayer
+#             print nn
             numSimulation += 1
             
 

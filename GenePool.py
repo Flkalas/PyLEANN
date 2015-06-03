@@ -34,11 +34,11 @@ class GENE_POOL(object):
         
     def doGame(self,blockBank = -1, numBlock = 10, mode=0):
         if blockBank == -1:
-            self.excuteBlock(blockBank)
+            self.excuteBlock(blockBank, mode=mode)
         else:
             for i in range(numBlock):
                 if i != blockBank:
-                    self.excuteBlock(i, numBlock, mode)
+                    self.excuteBlock(i, numBlock, mode=mode)
     
     def excuteBlock(self,blockBank = -1, numBlock = 10, mode=0, withoutSight=False ):
         if blockBank == -1:
@@ -55,7 +55,7 @@ class GENE_POOL(object):
 #                 print prb, blockStart
 #                 print self.prbPool.sizeBank, numBlock, blockBank
             for cell in self.genePool:
-                cell.solveProblem(prb,withoutSight,mode)
+                cell.solveProblem(prb, solveWithoutSight=withoutSight, mode=mode)
 
         return 0
     
@@ -99,7 +99,7 @@ class GENE_POOL(object):
             prevSize += len(listSelected)
             newGenePool += listSelected
             
-            listSelected = copy.deepcopy(self.selectionRandom(bankSize-prevSize,1))
+            listSelected = copy.deepcopy(self.selection(i,bankSize-prevSize,1))
             newGenePool += listSelected
             
             
@@ -498,8 +498,6 @@ class GENE_POOL(object):
 #                 print i, j, sum(elements), elements
                 
     def remainBestOne(self):
-        
-        
         temp = sorted(self.genePool, key=lambda cell: cell.getCount(0), reverse=self.dictTransfer[self.strTransfer])
         self.genePool = [temp[0]]
         return copy.deepcopy(temp[0])
