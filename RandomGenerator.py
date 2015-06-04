@@ -31,6 +31,8 @@ def singleRandomStructureTest(numInput, numOutput, numLayer, logger, numSimulati
             logger.writeGenerationResult(numSimulation,numGeneration,"Percent",geenpool.getStrGenerationPercent())
             logger.writeGenerationResult(numSimulation,numGeneration,"Diversity",geenpool.getStrDiversity())
             learningState = geenpool.checkLearningState(True)
+            if not learningState:
+                break
             
             if limitGeneration == numGeneration:
                 print "\nGeneration is over a hundred. It is too long time... The simulation end."                        
@@ -47,6 +49,8 @@ def singleRandomStructureTest(numInput, numOutput, numLayer, logger, numSimulati
             numGeneration += 1        
                     
     print "\n--------------------------------RESULT------------------------------\n"
+    geenpool.resetCounter()
+    geenpool.doGame(mode=2)
     geenpool.remainBestOne()
     geenpool.resetCounter()
     geenpool.excuteBlock(withoutSight = True, mode=2)
