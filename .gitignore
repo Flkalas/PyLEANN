@@ -1,3 +1,4 @@
 *.pyc
 *.checker
 parser/~$referParsed.xlsx
+*.csv
